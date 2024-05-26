@@ -1,0 +1,14 @@
+package views
+
+import "github.com/keyruu/traversetown-htmx/templates"
+import "github.com/keyruu/traversetown-htmx/models"
+
+templ Index(releases []models.Releases) {
+	@templates.Page("Such wow!") {
+		<h1>Index</h1>
+		<p>Welcome to the index page</p>
+		for _, release := range releases {
+			<li>{ release.Songtitle }</li>
+		}
+	}
+}

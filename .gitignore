@@ -1,0 +1,5 @@
+tmp
+.idea
+*_templ.go
+pb_data
+.env
