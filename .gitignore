@@ -1,5 +1,8 @@
 tmp
 .idea
+.vscode
 *_templ.go
 pb_data
 .env
+pb_public/main.css
+node_modules

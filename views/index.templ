@@ -1,14 +1,35 @@
 package views
 
-import "github.com/keyruu/traversetown-htmx/templates"
-import "github.com/keyruu/traversetown-htmx/models"
+import (
+	"fmt"
+
+	"github.com/keyruu/traversetown-htmx/models"
+	"github.com/keyruu/traversetown-htmx/views/layouts"
+)
+
+css bg(color string) {
+	background-color: { color };
+}
 
 templ Index(releases []models.Releases) {
-	@templates.Page("Such wow!") {
+	@layouts.Page("Such wow!") {
 		<h1>Index</h1>
 		<p>Welcome to the index page</p>
 		for _, release := range releases {
-			<li>{ release.Songtitle }</li>
+			<li>
+				<p>{ release.Songtitle }</p>
+				<p>{ release.Artists }</p>
+				<div class="h-[50vw] w-[50vw]">
+					<img
+						src={ fmt.Sprintf("/api/files/releases/%s/%s", release.Id, release.Cover) }
+						class={ bg(release.PrimaryColor) }
+						width="3000"
+						height="3000"
+						hx-trigger="load delay:2s"
+						hx-swap="outerHTML"
+					/>
+				</div>
+			</li>
 		}
 	}
 }

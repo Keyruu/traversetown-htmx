@@ -1,10 +1,12 @@
-package templates
+package layouts
 
 templ Page(title string) {
 	<!DOCTYPE html>
 	<html>
 		<head>
 			<title>{ title }</title>
+			<script src="https://unpkg.com/htmx.org@1.9.12"></script>
+			<link rel="stylesheet" href="/main.css"/>
 		</head>
 		<body>
 			{ children... }

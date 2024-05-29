@@ -1,8 +1,12 @@
-package views
+package handler
 
 import (
+	"strings"
+
 	"github.com/a-h/templ"
 	"github.com/keyruu/traversetown-htmx/models"
+	"github.com/keyruu/traversetown-htmx/views"
+	"github.com/keyruu/traversetown-htmx/views/components"
 	"github.com/labstack/echo/v5"
 	"github.com/pocketbase/pocketbase/daos"
 )
@@ -22,7 +26,11 @@ func (h *HandleController) IndexHandler(c echo.Context) error {
 		return err
 	}
 
-	return Render(c, 200, Index(releases))
+	return Render(c, 200, views.Index(releases))
+}
+
+func (h *HandleController) ImageHandler(c echo.Context) error {
+	return Render(c, 200, components.Image(strings.Replace(c.Request().URL.Path, "/image", "", 1), ""))
 }
 
 // This custom Render replaces Echo's echo.Context.Render() with templ's templ.Component.Render().
