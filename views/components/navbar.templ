@@ -1,0 +1,100 @@
+package components
+
+import "github.com/keyruu/traversetown-htmx/utils"
+
+func isPath(ctx context.Context, path string) bool {
+	return ctx.Value(utils.PathContextKey).(string) == path
+}
+
+templ Navbar() {
+	<nav id="navbar" class="bg-[#121212] z-50 fixed w-screen h-24 flex justify-center">
+		<div class="grid grid-cols-3 lg:grid-cols-5 grid-rows-1 gap-1 w-full">
+			@NavLink("/likes", "likes", "left", "right")
+			@NavLink("/music", "music", "left", "right")
+			<div class="flex justify-center items-center">
+				<p>Keyruu</p>
+			</div>
+			@NavLink("/listens", "listens", "right", "left")
+			@NavLink("/about", "about", "right", "left")
+			<div class="flex justify-center items-center lg:hidden">
+				<button variant="link" class="h-8 w-8" icon="i-mdi-menu" @click="slideoverOpen = true"></button>
+			</div>
+		</div>
+	</nav>
+	<style>
+    @scope (nav) {
+      /* Underline From Left */
+      .hvr-underline-from-left {
+        display: inline-block;
+        vertical-align: middle;
+        -webkit-transform: perspective(1px) translateZ(0);
+        transform: perspective(1px) translateZ(0);
+        box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+        position: relative;
+        overflow: hidden;
+      }
+      .hvr-underline-from-left:before {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        left: 0;
+        bottom: 0;
+        background: #4ca7f0;
+        height: 4px;
+        -webkit-transition-property: right;
+        transition-property: right;
+        -webkit-transition-duration: 0.3s;
+        transition-duration: 0.3s;
+        -webkit-transition-timing-function: ease-out;
+        transition-timing-function: ease-out;
+      }
+      .hvr-underline-from-left:hover:before, .hvr-underline-from-left:focus:before, .hvr-underline-from-left:active:before {
+        right: 0;
+      }
+
+      /* Underline From Right */
+      .hvr-underline-from-right {
+        display: inline-block;
+        vertical-align: middle;
+        -webkit-transform: perspective(1px) translateZ(0);
+        transform: perspective(1px) translateZ(0);
+        box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+        position: relative;
+        overflow: hidden;
+      }
+      .hvr-underline-from-right:before {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        right: 0;
+
+        bottom: 0;
+        background: #4ca7f0;
+        height: 4px;
+        -webkit-transition-property: left;
+        transition-property: left;
+        -webkit-transition-duration: 0.3s;
+        transition-duration: 0.3s;
+        -webkit-transition-timing-function: ease-out;
+        transition-timing-function: ease-out;
+      }
+      .hvr-underline-from-right:hover:before, .hvr-underline-from-right:focus:before, .hvr-underline-from-right:active:before {
+        left: 0;
+      }
+    }
+  </style>
+}
+
+templ NavLink(to, text, direction, opposite string) {
+	<div class="flex justify-center items-center">
+		<a
+			href={ templ.SafeURL(to) }
+			class={ "cursor-pointer",
+        "hvr-underline-from-" + direction,
+        templ.KV("before:" + opposite + "-full", !isPath(ctx, to)),
+        templ.KV("before:" + opposite + "-0", isPath(ctx, to)) }
+		>
+			{ text }
+		</a>
+	</div>
+}

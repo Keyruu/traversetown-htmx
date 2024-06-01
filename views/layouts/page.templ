@@ -1,15 +1,29 @@
 package layouts
 
+import "github.com/keyruu/traversetown-htmx/views/components"
+
 templ Page(title string) {
 	<!DOCTYPE html>
 	<html>
 		<head>
 			<title>{ title }</title>
 			<script src="https://unpkg.com/htmx.org@1.9.12"></script>
+			<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 			<link rel="stylesheet" href="/main.css"/>
+			<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
 		</head>
-		<body>
-			{ children... }
+		<body id="body" class="bg-[#121212] text-white">
+			@Body() {
+				{ children... }
+			}
 		</body>
 	</html>
+}
+
+templ Body() {
+	@components.Navbar()
+	<div class="h-24 w-full"></div>
+	<main id="main">
+		{ children... }
+	</main>
 }

@@ -1,4 +1,4 @@
-package image
+package utils
 
 import (
 	"crypto/hmac"
@@ -10,6 +10,14 @@ import (
 
 	"github.com/keyruu/traversetown-htmx/config"
 )
+
+func ResizeURL(url string, width int, height int) string {
+	env := config.NewEnv()
+	resize := fmt.Sprintf("resize:fill:%d:%d", width, height)
+	base := base64.RawURLEncoding.EncodeToString([]byte(url))
+	path := fmt.Sprintf("/%s/%s.webp", resize, base)
+	return fmt.Sprintf("%s%s", env.ImgproxyUrl, SignURL(path))
+}
 
 func SignURL(path string) string {
 	env := config.NewEnv()

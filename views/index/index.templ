@@ -1,0 +1,19 @@
+package index
+
+import (
+	"github.com/keyruu/traversetown-htmx/models"
+	"github.com/keyruu/traversetown-htmx/views/components"
+	"github.com/keyruu/traversetown-htmx/views/layouts"
+)
+
+templ Page(releases []models.Releases) {
+	@layouts.Page("Such wow!") {
+		@Main(releases)
+	}
+}
+
+templ Main(releases []models.Releases) {
+	<h1>Index</h1>
+	<p>Welcome to the index page</p>
+	@components.Releases(releases, 0)
+}

@@ -9,6 +9,7 @@ import (
 type Env struct {
 	Migrate       bool   `mapstructure:"MIGRATE" required:"true"`
 	Environment   string `mapstructure:"ENVIRONMENT" required:"true"`
+	BaseUrl       string `mapstructure:"BASE_URL" required:"true"`
 	S3AccessKey   string `mapstructure:"S3_ACCESS_KEY" required:"true"`
 	S3SecretKey   string `mapstructure:"S3_SECRET_KEY" required:"true"`
 	S3Region      string `mapstructure:"S3_REGION" required:"true"`

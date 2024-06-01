@@ -1,12 +1,15 @@
 package main
 
 import (
+	"context"
 	"log"
 	"os"
 
 	"github.com/keyruu/traversetown-htmx/config"
 	"github.com/keyruu/traversetown-htmx/handler"
 	_ "github.com/keyruu/traversetown-htmx/migrations"
+	"github.com/keyruu/traversetown-htmx/utils"
+	"github.com/labstack/echo/v5"
 
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/apis"
@@ -29,21 +32,25 @@ func main() {
 		Automigrate: isDev,
 	})
 
-	app.OnRecordAfterCreateRequest("releases").Add(func(e *core.RecordCreateEvent) error {
-		return handler.CreateRelease(e, app.Dao())
-	})
-
-	app.OnRecordAfterUpdateRequest("releases").Add(func(e *core.RecordUpdateEvent) error {
-		return handler.UpdateRelease(e, app.Dao())
-	})
-
 	// serves static files from the provided public dir (if exists)
 	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
+		e.Router.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
+			return func(c echo.Context) error {
+				ctx := c.Request().Context()                           // Get context.Context from echo.Context
+				ctx = context.WithValue(ctx, utils.EnvContextKey, env) // Add Env to context.Context
+				ctx = context.WithValue(ctx, utils.PathContextKey, c.Request().URL.Path)
+				c.SetRequest(c.Request().WithContext(ctx)) // Update the request with the new context
+				return next(c)
+			}
+		})
+
 		controller := handler.NewController(app.Dao())
 
 		e.Router.GET("/", controller.IndexHandler)
+		// e.Router.GET("/body/index", controller.IndexBodyHandler)
 
-		e.Router.GET("/image*", controller.ImageHandler)
+		e.Router.GET("/music", controller.MusicHandler)
+		// e.Router.GET("/main/music", controller.MusicMainHandler)
 
 		e.Router.GET("/*", apis.StaticDirectoryHandler(os.DirFS("./pb_public"), false))
 		return nil

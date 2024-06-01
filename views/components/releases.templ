@@ -1,0 +1,72 @@
+package components
+
+import (
+	"github.com/keyruu/traversetown-htmx/models"
+	"fmt"
+	"strings"
+)
+
+func getDataAsJs(releases []models.Releases) string {
+	var sb strings.Builder
+	sb.WriteString("[")
+	for _, release := range releases {
+		sb.WriteString("{")
+		sb.WriteString(fmt.Sprintf("songtitle: '%s',", release.Songtitle))
+		sb.WriteString(fmt.Sprintf("artists: '%s',", release.Artists))
+		sb.WriteString(fmt.Sprintf("slug: '%s',", release.Slug))
+		sb.WriteString(fmt.Sprintf("primary_color: '%s',", release.PrimaryColor))
+		sb.WriteString(fmt.Sprintf("apple: '%s',", release.Apple))
+		sb.WriteString(fmt.Sprintf("spotify: '%s',", release.Spotify))
+		sb.WriteString(fmt.Sprintf("youtube: '%s',", release.Youtube))
+		sb.WriteString("},")
+	}
+	sb.WriteString("]")
+	return sb.String()
+}
+
+templ Releases(releases []models.Releases, initialSlide int) {
+	<script>
+    function onSlideChange(event) {
+      this.index = event.detail[0].activeIndex;
+      
+      history.pushState({}, '', `/music/${this.releases[this.index].slug}`)
+    }
+  </script>
+	<div class="text-gray-600 body-font my-auto overflow-hidden">
+		<div
+			class="w-full mx-auto flex flex-col px-5 justify-center items-center"
+			x-data={ fmt.Sprintf("{ index: %d, releases: %s }", initialSlide, getDataAsJs(releases)) }
+		>
+			<div class="custom-swiper flex items-center justify-center mb-10">
+				<swiper-container
+					navigation="true"
+					pagination="true"
+					effect="coverflow"
+					centered-slides="true"
+					slides-per-view="auto"
+					initial-slide={ fmt.Sprint(initialSlide) }
+					@swiperslidechange="onSlideChange"
+					class="h-full"
+				>
+					for _, release := range releases {
+						<swiper-slide
+							class="flex items-center justify-center"
+						>
+							@Cover(release)
+						</swiper-slide>
+					}
+				</swiper-container>
+			</div>
+			<div
+				:style="`background: ${releases[index].primary_color}`"
+				class="h-full px-4 overflow-hidden text-center relative py-0.5"
+			>
+				<h1 class="title-font sm:text-4xl text-3xl font-medium text-gray-900 flex">
+					<strong x-text="releases[index].songtitle"></strong>&nbsp—&nbsp
+					<p x-text="releases[index].artists">test</p>
+				</h1>
+			</div>
+			<div class="flex"></div>
+		</div>
+	</div>
+}

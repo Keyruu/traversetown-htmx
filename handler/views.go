@@ -1,12 +1,10 @@
 package handler
 
 import (
-	"strings"
-
-	"github.com/a-h/templ"
 	"github.com/keyruu/traversetown-htmx/models"
-	"github.com/keyruu/traversetown-htmx/views"
-	"github.com/keyruu/traversetown-htmx/views/components"
+	"github.com/keyruu/traversetown-htmx/utils"
+	"github.com/keyruu/traversetown-htmx/views/index"
+	"github.com/keyruu/traversetown-htmx/views/music"
 	"github.com/labstack/echo/v5"
 	"github.com/pocketbase/pocketbase/daos"
 )
@@ -26,21 +24,9 @@ func (h *HandleController) IndexHandler(c echo.Context) error {
 		return err
 	}
 
-	return Render(c, 200, views.Index(releases))
+	return utils.Render(c, 200, index.Page(releases))
 }
 
-func (h *HandleController) ImageHandler(c echo.Context) error {
-	return Render(c, 200, components.Image(strings.Replace(c.Request().URL.Path, "/image", "", 1), ""))
-}
-
-// This custom Render replaces Echo's echo.Context.Render() with templ's templ.Component.Render().
-func Render(ctx echo.Context, statusCode int, t templ.Component) error {
-	buf := templ.GetBuffer()
-	defer templ.ReleaseBuffer(buf)
-
-	if err := t.Render(ctx.Request().Context(), buf); err != nil {
-		return err
-	}
-
-	return ctx.HTML(statusCode, buf.String())
+func (h *HandleController) MusicHandler(c echo.Context) error {
+	return utils.Render(c, 200, music.Page())
 }
