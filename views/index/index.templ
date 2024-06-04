@@ -15,5 +15,5 @@ templ Page(releases []models.Releases) {
 templ Main(releases []models.Releases) {
 	<h1>Index</h1>
 	<p>Welcome to the index page</p>
-	@components.Releases(releases, 0)
+	@components.Releases(releases, 0, false)
 }

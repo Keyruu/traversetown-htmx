@@ -26,14 +26,13 @@ func sizes() string {
 }
 
 templ Cover(release models.Releases) {
-	<div class="h-[50vw] w-[50vw]">
+	<div class="flex justify-center items-center">
 		<img
 			src={ imagePath(release) }
 			srcset={ srcset(release, utils.GetEnv(ctx).BaseUrl) }
 			sizes={ sizes() }
-			class={ bg(release.PrimaryColor) }
-			width="3000"
-			height="3000"
+			class={ bg(release.PrimaryColor), "h-[45vw]" }
+			aspect-ratio="1/1"
 		/>
 	</div>
 }

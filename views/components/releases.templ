@@ -24,12 +24,25 @@ func getDataAsJs(releases []models.Releases) string {
 	return sb.String()
 }
 
-templ Releases(releases []models.Releases, initialSlide int) {
+templ iconLink(icon string, service string) {
+	<a
+		class="m-8"
+		:href={ "releases[index]." + service }
+		target="_blank"
+		rel="noreferrer"
+		aria-label={ "Link to " + service }
+	>
+		<span
+			class={ "iconify", icon, "transition duration-500 hover:scale-110 w-16 h-16" }
+			:style="`background-color: ${releases[index].primary_color}`"
+		></span>
+	</a>
+}
+
+templ Releases(releases []models.Releases, initialSlide int, history bool) {
 	<script>
     function onSlideChange(event) {
       this.index = event.detail[0].activeIndex;
-      
-      history.pushState({}, '', `/music/${this.releases[this.index].slug}`)
     }
   </script>
 	<div class="text-gray-600 body-font my-auto overflow-hidden">
@@ -41,9 +54,12 @@ templ Releases(releases []models.Releases, initialSlide int) {
 				<swiper-container
 					navigation="true"
 					pagination="true"
-					effect="coverflow"
-					centered-slides="true"
 					slides-per-view="auto"
+					history-enabled={ fmt.Sprint(history) }
+					history-key="music"
+					effect="cards"
+					cards-effect-slide-shadows="false"
+					grab-cursor="true"
 					initial-slide={ fmt.Sprint(initialSlide) }
 					@swiperslidechange="onSlideChange"
 					class="h-full"
@@ -51,6 +67,7 @@ templ Releases(releases []models.Releases, initialSlide int) {
 					for _, release := range releases {
 						<swiper-slide
 							class="flex items-center justify-center"
+							data-history={ release.Slug }
 						>
 							@Cover(release)
 						</swiper-slide>
@@ -66,7 +83,18 @@ templ Releases(releases []models.Releases, initialSlide int) {
 					<p x-text="releases[index].artists">test</p>
 				</h1>
 			</div>
-			<div class="flex"></div>
+			<style>
+        @scope (#releaseIcons) {
+          span:not(:hover) {
+            background-color: gray !important;
+          }
+        }
+      </style>
+			<div id="releaseIcons" class="flex">
+				@iconLink("simple-icons--spotify", "spotify")
+				@iconLink("simple-icons--apple", "apple")
+				@iconLink("simple-icons--youtube", "youtube")
+			</div>
 		</div>
 	</div>
 }
