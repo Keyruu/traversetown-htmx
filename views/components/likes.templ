@@ -1,0 +1,15 @@
+package components
+
+templ Likes(likes []string, extra string) {
+	<ul
+		class="personal-text w-full flex justify-center overflow-x-clip"
+	>
+		for _, like := range likes {
+			<li
+				class={ "lg:text-7xl md:text-7xl text-4xl uppercase hover:-translate-y-4 transition duration-200 ease-out", extra }
+			>
+				{ like }
+			</li>
+		}
+	</ul>
+}

@@ -20,7 +20,6 @@ type Releases struct {
 	Apple        string         `db:"apple" json:"apple"`
 	Spotify      string         `db:"spotify" json:"spotify"`
 	Youtube      string         `db:"youtube" json:"youtube"`
-	CoverHash    string         `db:"cover_hash" json:"cover_hash"`
 }
 
 func (m *Releases) TableName() string {

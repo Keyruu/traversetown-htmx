@@ -52,6 +52,8 @@ func main() {
 		e.Router.GET("/music", controller.MusicHandler)
 		// e.Router.GET("/main/music", controller.MusicMainHandler)
 
+		e.Router.GET("/fullstack", controller.FullstackHandler)
+
 		e.Router.GET("/*", apis.StaticDirectoryHandler(os.DirFS("./pb_public"), false))
 		return nil
 	})

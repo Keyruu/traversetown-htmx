@@ -6,14 +6,29 @@ import (
 	"github.com/keyruu/traversetown-htmx/views/layouts"
 )
 
-templ Page(releases []models.Releases) {
+templ Page(releases []models.Releases, devops []models.Fullstack) {
 	@layouts.Page("Such wow!") {
-		@Main(releases)
+		@Main(releases, devops)
 	}
 }
 
-templ Main(releases []models.Releases) {
-	<h1>Index</h1>
-	<p>Welcome to the index page</p>
-	@components.Releases(releases, 0, false)
+templ Main(releases []models.Releases, devops []models.Fullstack) {
+	<div
+		class="w-full h-screen bg-no-repeat bg-cover flex justify-center items-center flex-col"
+		style="background-image: url('/gradient/main-gradient.png');"
+	>
+		<div class="flex-grow flex items-center justify-center">
+			<img src="/keyruu_logo.png" alt="Keyruu"/>
+		</div>
+		<div class="flex items-end justify-center">
+			<span class="iconify mdi--arrow-down h-10 w-10 text-white mb-28"></span>
+		</div>
+	</div>
+	@components.ILike()
+	<section id="fullstack" class="flex sm:flex-row flex-col justify-center items-center text-center w-full mb-20">
+		@components.Fullstack(devops, "devops")
+	</section>
+	<section id="releases" class="m-20">
+		@components.Releases(releases, 0, false)
+	</section>
 }

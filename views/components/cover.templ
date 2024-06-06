@@ -18,7 +18,8 @@ func imagePath(release models.Releases) string {
 func srcset(release models.Releases, base string) string {
 	url := base + imagePath(release)
 	return fmt.Sprintf("%s 3000w, %s 1500w, %s 900w, %s 600w, %s 300w",
-		utils.ResizeURL(url, 3000, 3000), utils.ResizeURL(url, 1500, 1500), utils.ResizeURL(url, 900, 900), utils.ResizeURL(url, 600, 600), utils.ResizeURL(url, 300, 300))
+		utils.ResizeURL(url, 3000, 3000), utils.ResizeURL(url, 1500, 1500),
+		utils.ResizeURL(url, 900, 900), utils.ResizeURL(url, 600, 600), utils.ResizeURL(url, 300, 300))
 }
 
 func sizes() string {
@@ -28,10 +29,9 @@ func sizes() string {
 templ Cover(release models.Releases) {
 	<div class="flex justify-center items-center">
 		<img
-			src={ imagePath(release) }
 			srcset={ srcset(release, utils.GetEnv(ctx).BaseUrl) }
 			sizes={ sizes() }
-			class={ bg(release.PrimaryColor), "h-[45vw]" }
+			class={ bg(release.PrimaryColor), "h-[45vw] lg:h-[30vw]" }
 			aspect-ratio="1/1"
 		/>
 	</div>

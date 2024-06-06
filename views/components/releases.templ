@@ -47,7 +47,7 @@ templ Releases(releases []models.Releases, initialSlide int, history bool) {
   </script>
 	<div class="text-gray-600 body-font my-auto overflow-hidden">
 		<div
-			class="w-full mx-auto flex flex-col px-5 justify-center items-center"
+			class="mx-auto flex flex-col px-5 justify-center items-center"
 			x-data={ fmt.Sprintf("{ index: %d, releases: %s }", initialSlide, getDataAsJs(releases)) }
 		>
 			<div class="custom-swiper flex items-center justify-center mb-10">

@@ -1,0 +1,42 @@
+package components
+
+import (
+	"fmt"
+	"github.com/keyruu/traversetown-htmx/models"
+)
+
+func fullstackImagePath(fullstack models.Fullstack) string {
+	return fmt.Sprintf("/api/files/fullstack/%s/%s", fullstack.Id, fullstack.Logo)
+}
+
+templ InfoBox(fullstacks []models.Fullstack) {
+	<div
+		class="sm:w-9/12 w-full h-4/6 flex justify-center items-center group"
+	>
+		<ul class="grid grid-cols-3 gap-0.5 lg:gap-2">
+			for _, fullstack := range fullstacks {
+				<li
+					class="flex justify-center h-full"
+					key={ fullstack.Id }
+				>
+					<div class="sm:tooltip" data-tip={ fullstack.Description }>
+						<div class="flex justify-center items-center bg-[#121212] p-6 w1/3 my-4">
+							<a href={ templ.SafeURL(fullstack.Link) } target="_blank">
+								<img
+									src={ fullstackImagePath(fullstack) }
+									alt={ fullstack.Name }
+									height="60"
+									class="object-contain h-[60px] w-[60px] lg:w-full"
+									format="webp"
+								/>
+							</a>
+						</div>
+						<p class="mix-blend-difference hidden lg:flex">
+							@templ.Raw(fullstack.Description)
+						</p>
+					</div>
+				</li>
+			}
+		</ul>
+	</div>
+}

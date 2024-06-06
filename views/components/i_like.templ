@@ -1,0 +1,32 @@
+package components
+
+func likesArray() []string {
+	return []string{"Gaming", "Design", "DevOps", "Music", "Design", "Spezi", "Gaming", "Frontend", "Backend", "Spezi", "Music", "DevOps"}
+}
+
+func revLikesArray() []string {
+	return []string{"Design", "Frontend", "Music", "Spezi", "DevOps", "Backend", "Gaming", "Spezi", "Design", "Music", "DevOps", "Gaming"}
+}
+
+templ ILike() {
+	<div
+		class="foggy-sea h-[600px] bg-no-repeat bg-cover w-full mb-24 flex flex-col justify-center"
+		style="background-image: url('/foggy_sea.jpg')"
+	>
+		<p
+			class="mix-blend-difference lg:text-8xl md:text-6xl mb-8 font-thin w-full text-center text-4xl"
+		>
+			i like
+		</p>
+		<div class="likes">
+			<div class="flex-row flex mix-blend-difference origin-bottom">
+				@Likes(likesArray(), "odd:font-bold even:font-light")
+			</div>
+			<div
+				class="flex-row flex mix-blend-difference origin-bottom"
+			>
+				@Likes(revLikesArray(), "odd:font-light even:font-bold text-right")
+			</div>
+		</div>
+	</div>
+}

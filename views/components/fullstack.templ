@@ -1,0 +1,37 @@
+package components
+
+import "github.com/keyruu/traversetown-htmx/models"
+
+templ stackButton(name string, selected bool) {
+	<h1
+		class={ "m-4 lg:m-6 font-bold text-sm lg:text-xl p-2 lg:p-4 border-[1px]",
+    "hover:bg-white hover:text-black cursor-pointer uppercase",
+    templ.KV("bg-white text-black", selected) }
+		hx-get={ "/fullstack?type=" + name }
+		hx-target="#fullstack"
+	>{ name }</h1>
+}
+
+templ Fullstack(stack []models.Fullstack, selected string) {
+	<style>
+		@scoped(#fullstack) {
+			.fullstack {
+				background-repeat: no-repeat;
+				background-size: cover;
+			}
+		}
+	</style>
+	<div>
+		<div class="flex flex-row justify-center">
+			@stackButton("devops", selected == "devops")
+			@stackButton("frontend", selected == "frontend")
+			@stackButton("backend", selected == "backend")
+		</div>
+		<div
+			class="fullstack w-screen flex justify-center items-center py-14 h-[66vh]"
+			style="background-image: url('/gradient/subtle-gradient.png')"
+		>
+			@InfoBox(stack)
+		</div>
+	</div>
+}
