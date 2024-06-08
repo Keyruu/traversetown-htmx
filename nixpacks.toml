@@ -10,7 +10,7 @@ cmds = [
 ]
 [start]
 cmd = "./out serve"
-runImage = "alpine"
+runImage = 'debian:bullseye'
 [variables]
 MIGRATE = "false"
 ENVIRONMENT = "prod"
