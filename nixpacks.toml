@@ -1,12 +1,7 @@
 providers = ["go", "node"]
 
 [phases.setup]
-nixPkgs = [
-  "...",
-  "tailwindcss",
-  "templ",
-  "curl",
-] # Install the ffmpeg package from Nix
+nixPkgs = ["...", "tailwindcss", "templ"] # Install the ffmpeg package from Nix
 [phases.build]
 cmds = [
   "npx tailwindcss -i ./main.css -o ./pb_public/main.css",
@@ -15,6 +10,7 @@ cmds = [
 ]
 [start]
 cmd = "./out serve"
+runImage = "alpine"
 [variables]
 MIGRATE = "false"
 ENVIRONMENT = "prod"
