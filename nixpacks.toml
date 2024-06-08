@@ -9,5 +9,5 @@ cmds = [
 [start]
 cmd = "./out serve"
 [variables]
-MIGRATE = false
+MIGRATE = "false"
 ENVIRONMENT = "prod"
