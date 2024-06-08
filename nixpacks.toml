@@ -9,8 +9,9 @@ cmds = [
   "go build -o out",
 ]
 [start]
-cmd = "./out serve"
-runImage = 'debian:bullseye'
+cmd = "./out serve --http=0.0.0.0:8090"
+runImage = 'debian:slim'
+onlyIncludeFiles = ['./out', './pb_public']
 [variables]
 MIGRATE = "false"
 ENVIRONMENT = "prod"
