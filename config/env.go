@@ -27,15 +27,14 @@ type Env struct {
 func NewEnv() *Env {
 	env := Env{}
 	viper.SetConfigFile(".env")
+	viper.AutomaticEnv()
 
-	err := viper.ReadInConfig()
-	if err != nil {
-		log.Fatal("Can't find the file .env : ", err)
+	if err := viper.ReadInConfig(); err != nil {
+		log.Println("Can't find the file .env : ", err)
 	}
 
-	err = viper.Unmarshal(&env)
-	if err != nil {
-		log.Fatal("Environment can't be loaded: ", err)
+	if err := viper.Unmarshal(&env); err != nil {
+		log.Println("Environment can't be loaded: ", err)
 	}
 
 	return &env
