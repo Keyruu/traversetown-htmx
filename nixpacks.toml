@@ -10,7 +10,7 @@ cmds = [
 ]
 [start]
 cmd = "./out serve --http=0.0.0.0:8090"
-runImage = 'debian:slim'
+runImage = 'debian:bookworm-slim'
 onlyIncludeFiles = ['./out', './pb_public']
 [variables]
 MIGRATE = "false"
