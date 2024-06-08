@@ -5,7 +5,7 @@ nixPkgs = [
   "...",
   "tailwindcss",
   "templ",
-  "wget",
+  "curl",
 ] # Install the ffmpeg package from Nix
 [phases.build]
 cmds = [
@@ -15,8 +15,6 @@ cmds = [
 ]
 [start]
 cmd = "./out serve"
-runImage = 'debian:bullseye-slim'
-
 [variables]
 MIGRATE = "false"
 ENVIRONMENT = "prod"
