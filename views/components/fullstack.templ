@@ -1,6 +1,7 @@
 package components
 
 import "github.com/keyruu/traversetown-htmx/models"
+import "github.com/keyruu/traversetown-htmx/utils"
 
 templ stackButton(name string, selected bool) {
 	<h1
@@ -14,22 +15,55 @@ templ stackButton(name string, selected bool) {
 
 templ Fullstack(stack []models.Fullstack, selected string) {
 	<style>
-		@scoped(#fullstack) {
-			.fullstack {
-				background-repeat: no-repeat;
-				background-size: cover;
+		.fullstack {
+			background-repeat: no-repeat;
+			background-size: cover;
+		}
+
+		li.stack-item {
+			animation: fadeIn 1s ease both;
+		}
+
+		li.stack-item:nth-child(2) {
+			animation-delay: 100ms;
+		}
+
+		li.stack-item:nth-child(3) {
+			animation-delay: 200ms;
+		}
+
+		li.stack-item:nth-child(4) {
+			animation-delay: 300ms;
+		}
+
+		li.stack-item:nth-child(5) {
+			animation-delay: 400ms;
+		}
+
+		li.stack-item:nth-child(6) {
+			animation-delay: 500ms;
+		}
+
+		@keyframes fadeIn {
+			from {
+				opacity: 0;
+				transform: translate3d(0, -20%, 0);
+			}
+			to {
+				opacity: 1;
+				transform: translate3d(0, 0, 0);
 			}
 		}
 	</style>
-	<div>
+	<div id="fullstack-content">
 		<div class="flex flex-row justify-center">
 			@stackButton("devops", selected == "devops")
 			@stackButton("frontend", selected == "frontend")
 			@stackButton("backend", selected == "backend")
 		</div>
 		<div
-			class="fullstack w-screen flex justify-center items-center py-14 h-[66vh]"
-			style="background-image: url('/gradient/subtle-gradient.png')"
+			class={ "fullstack w-screen flex justify-center items-center py-14 h-[66vh]", 
+			Bg(utils.GetEnv(ctx).BaseUrl + "/gradient/subtle-gradient.png", 1440, 640) }
 		>
 			@InfoBox(stack)
 		</div>

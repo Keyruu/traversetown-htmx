@@ -1,0 +1,13 @@
+[phases.setup]
+nixPkgs = ["...", "tailwindcss", "templ"] # Install the ffmpeg package from Nix
+[phases.build]
+cmds = [
+  "tailwindcss -i ./main.css -o ./pb_public/main.css",
+  "templ generate",
+  "...",
+]
+[start]
+cmd = "./out serve"
+[variables]
+MIGRATE = false
+ENVIRONMENT = "prod"

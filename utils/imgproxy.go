@@ -19,6 +19,13 @@ func ResizeURL(url string, width int, height int) string {
 	return fmt.Sprintf("%s%s", env.ImgproxyUrl, SignURL(path))
 }
 
+func WebpURL(url string) string {
+	env := config.NewEnv()
+	base := base64.RawURLEncoding.EncodeToString([]byte(url))
+	path := fmt.Sprintf("//%s.webp", base)
+	return fmt.Sprintf("%s%s", env.ImgproxyUrl, SignURL(path))
+}
+
 func SignURL(path string) string {
 	env := config.NewEnv()
 

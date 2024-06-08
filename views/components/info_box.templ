@@ -3,6 +3,7 @@ package components
 import (
 	"fmt"
 	"github.com/keyruu/traversetown-htmx/models"
+	"github.com/keyruu/traversetown-htmx/utils"
 )
 
 func fullstackImagePath(fullstack models.Fullstack) string {
@@ -16,14 +17,14 @@ templ InfoBox(fullstacks []models.Fullstack) {
 		<ul class="grid grid-cols-3 gap-0.5 lg:gap-2">
 			for _, fullstack := range fullstacks {
 				<li
-					class="flex justify-center h-full"
+					class="flex justify-center h-full w-full stack-item"
 					key={ fullstack.Id }
 				>
-					<div class="sm:tooltip" data-tip={ fullstack.Description }>
-						<div class="flex justify-center items-center bg-[#121212] p-6 w1/3 my-4">
+					<div class="sm:tooltip w-full" data-tip={ fullstack.Description }>
+						<div class="flex justify-center items-center bg-[#121212] p-6 w-full my-4">
 							<a href={ templ.SafeURL(fullstack.Link) } target="_blank">
 								<img
-									src={ fullstackImagePath(fullstack) }
+									src={ utils.WebpURL(utils.GetEnv(ctx).BaseUrl + fullstackImagePath(fullstack)) }
 									alt={ fullstack.Name }
 									height="60"
 									class="object-contain h-[60px] w-[60px] lg:w-full"

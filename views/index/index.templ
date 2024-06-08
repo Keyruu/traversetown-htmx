@@ -4,6 +4,7 @@ import (
 	"github.com/keyruu/traversetown-htmx/models"
 	"github.com/keyruu/traversetown-htmx/views/components"
 	"github.com/keyruu/traversetown-htmx/views/layouts"
+	"github.com/keyruu/traversetown-htmx/utils"
 )
 
 templ Page(releases []models.Releases, devops []models.Fullstack) {
@@ -14,11 +15,11 @@ templ Page(releases []models.Releases, devops []models.Fullstack) {
 
 templ Main(releases []models.Releases, devops []models.Fullstack) {
 	<div
-		class="w-full h-screen bg-no-repeat bg-cover flex justify-center items-center flex-col"
-		style="background-image: url('/gradient/main-gradient.png');"
+		class={ "w-full h-screen bg-no-repeat bg-cover flex justify-center items-center flex-col",
+			components.Bg(utils.GetEnv(ctx).BaseUrl + "/gradient/main-gradient.png", 1440, 640) }
 	>
 		<div class="flex-grow flex items-center justify-center">
-			<img src="/keyruu_logo.png" alt="Keyruu"/>
+			<img src={ utils.WebpURL(utils.GetEnv(ctx).BaseUrl + "/keyruu_logo.png") } alt="Keyruu"/>
 		</div>
 		<div class="flex items-end justify-center">
 			<span class="iconify mdi--arrow-down h-10 w-10 text-white mb-28"></span>
