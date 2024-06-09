@@ -18,11 +18,10 @@ type Env struct {
 	S3PathStyle        bool   `mapstructure:"S3_PATH_STYLE" required:"true"`
 	BackupsCron        string `mapstructure:"BACKUPS_CRON" required:"true"`
 	BackupsKeep        int    `mapstructure:"BACKUPS_KEEP" required:"true"`
-	BackupsBucket      string `mapstructure:"BACKUPS_BUCKET" required:"true"`
+	BackupsS3Bucket    string `mapstructure:"BACKUPS_S3_BUCKET" required:"true"`
 	BackupsS3AccessKey string `mapstructure:"BACKUPS_S3_ACCESS_KEY" required:"true"`
 	BackupsS3SecretKey string `mapstructure:"BACKUPS_S3_SECRET_KEY" required:"true"`
 	BackupsS3Region    string `mapstructure:"BACKUPS_S3_REGION" required:"true"`
-	BackupsS3Bucket    string `mapstructure:"BACKUPS_S3_BUCKET" required:"true"`
 	BackupsS3Endpoint  string `mapstructure:"BACKUPS_S3_ENDPOINT" required:"true"`
 	BackupsS3PathStyle bool   `mapstructure:"BACKUPS_S3_PATH_STYLE" required:"true"`
 	ImgproxyUrl        string `mapstructure:"IMGPROXY_URL" required:"true"`

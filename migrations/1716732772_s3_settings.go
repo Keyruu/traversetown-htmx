@@ -27,7 +27,7 @@ func init() {
 		settings.Backups.S3.AccessKey = env.BackupsS3AccessKey
 		settings.Backups.S3.Secret = env.BackupsS3SecretKey
 		settings.Backups.S3.Region = env.BackupsS3Region
-		settings.Backups.S3.Bucket = env.BackupsBucket
+		settings.Backups.S3.Bucket = env.BackupsS3Bucket
 		settings.Backups.S3.Endpoint = env.BackupsS3Endpoint
 		settings.Backups.S3.ForcePathStyle = env.BackupsS3PathStyle
 		settings.Backups.Cron = env.BackupsCron
