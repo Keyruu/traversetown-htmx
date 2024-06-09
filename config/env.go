@@ -37,11 +37,11 @@ func NewEnv() *Env {
 		log.Println("Can't find the file .env : ", err)
 	}
 
+	viper.AutomaticEnv()
+
 	if err := viper.Unmarshal(&env); err != nil {
 		log.Println("Environment can't be loaded: ", err)
 	}
-
-	viper.AutomaticEnv()
 
 	return &env
 }
