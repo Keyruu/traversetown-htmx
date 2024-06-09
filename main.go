@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/keyruu/traversetown-htmx/config"
 	"github.com/keyruu/traversetown-htmx/handler"
 	_ "github.com/keyruu/traversetown-htmx/migrations"
@@ -19,6 +20,12 @@ import (
 
 func main() {
 	app := pocketbase.New()
+
+	err := godotenv.Load()
+	if err != nil {
+		log.Printf("unable to load .env file: %e", err)
+	}
+
 	env := config.NewEnv()
 
 	// loosely check if it was executed using "go run"

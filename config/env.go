@@ -3,45 +3,39 @@ package config
 import (
 	"log"
 
-	"github.com/spf13/viper"
+	"github.com/caarlos0/env/v6"
 )
 
 type Env struct {
-	Migrate            bool   `mapstructure:"MIGRATE" required:"true"`
-	Environment        string `mapstructure:"ENVIRONMENT" required:"true"`
-	BaseUrl            string `mapstructure:"BASE_URL" required:"true"`
-	S3AccessKey        string `mapstructure:"S3_ACCESS_KEY" required:"true"`
-	S3SecretKey        string `mapstructure:"S3_SECRET_KEY" required:"true"`
-	S3Region           string `mapstructure:"S3_REGION" required:"true"`
-	S3Bucket           string `mapstructure:"S3_BUCKET" required:"true"`
-	S3Endpoint         string `mapstructure:"S3_ENDPOINT" required:"true"`
-	S3PathStyle        bool   `mapstructure:"S3_PATH_STYLE" required:"true"`
-	BackupsCron        string `mapstructure:"BACKUPS_CRON" required:"true"`
-	BackupsKeep        int    `mapstructure:"BACKUPS_KEEP" required:"true"`
-	BackupsS3Bucket    string `mapstructure:"BACKUPS_S3_BUCKET" required:"true"`
-	BackupsS3AccessKey string `mapstructure:"BACKUPS_S3_ACCESS_KEY" required:"true"`
-	BackupsS3SecretKey string `mapstructure:"BACKUPS_S3_SECRET_KEY" required:"true"`
-	BackupsS3Region    string `mapstructure:"BACKUPS_S3_REGION" required:"true"`
-	BackupsS3Endpoint  string `mapstructure:"BACKUPS_S3_ENDPOINT" required:"true"`
-	BackupsS3PathStyle bool   `mapstructure:"BACKUPS_S3_PATH_STYLE" required:"true"`
-	ImgproxyUrl        string `mapstructure:"IMGPROXY_URL" required:"true"`
-	ImgproxyKey        string `mapstructure:"IMGPROXY_KEY" required:"true"`
-	ImgproxySalt       string `mapstructure:"IMGPROXY_SALT" required:"true"`
+	Migrate            bool   `env:"MIGRATE,required"`
+	Environment        string `env:"ENVIRONMENT,required"`
+	BaseUrl            string `env:"BASE_URL,required"`
+	S3AccessKey        string `env:"S3_ACCESS_KEY,required"`
+	S3SecretKey        string `env:"S3_SECRET_KEY,required"`
+	S3Region           string `env:"S3_REGION,required"`
+	S3Bucket           string `env:"S3_BUCKET,required"`
+	S3Endpoint         string `env:"S3_ENDPOINT,required"`
+	S3PathStyle        bool   `env:"S3_PATH_STYLE,required"`
+	BackupsCron        string `env:"BACKUPS_CRON,required"`
+	BackupsKeep        int    `env:"BACKUPS_KEEP,required"`
+	BackupsS3Bucket    string `env:"BACKUPS_S3_BUCKET,required"`
+	BackupsS3AccessKey string `env:"BACKUPS_S3_ACCESS_KEY,required"`
+	BackupsS3SecretKey string `env:"BACKUPS_S3_SECRET_KEY,required"`
+	BackupsS3Region    string `env:"BACKUPS_S3_REGION,required"`
+	BackupsS3Endpoint  string `env:"BACKUPS_S3_ENDPOINT,required"`
+	BackupsS3PathStyle bool   `env:"BACKUPS_S3_PATH_STYLE,required"`
+	ImgproxyUrl        string `env:"IMGPROXY_URL,required"`
+	ImgproxyKey        string `env:"IMGPROXY_KEY,required"`
+	ImgproxySalt       string `env:"IMGPROXY_SALT,required"`
 }
 
 func NewEnv() *Env {
-	env := Env{}
-	viper.SetConfigFile(".env")
+	envStruct := Env{}
 
-	if err := viper.ReadInConfig(); err != nil {
-		log.Println("Can't find the file .env : ", err)
+	err := env.Parse(&envStruct) // 👈 Parse environment variables into `Config`
+	if err != nil {
+		log.Fatalf("unable to parse ennvironment variables: %e", err)
 	}
 
-	viper.AutomaticEnv()
-
-	if err := viper.Unmarshal(&env); err != nil {
-		log.Println("Environment can't be loaded: ", err)
-	}
-
-	return &env
+	return &envStruct
 }
