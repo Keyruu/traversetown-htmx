@@ -1,12 +1,18 @@
-providers = ["go", "node"]
-
+providers = ["go"]
 [phases.setup]
-nixPkgs = ["...", "tailwindcss", "templ"] # Install the ffmpeg package from Nix
+nixPkgs = [
+  "...",
+  "tailwindcss",
+  "templ",
+  "nodejs_18",
+] # Install the ffmpeg package from Nix
+[phases.install]
+cmds = ["npm install", "..."]
 [phases.build]
 cmds = [
   "npx tailwindcss -i ./main.css -o ./pb_public/main.css",
   "templ generate",
-  "go build -o out",
+  "...",
 ]
 [start]
 cmd = "./out serve --http=0.0.0.0:8090"

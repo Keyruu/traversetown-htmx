@@ -4,13 +4,16 @@ import "github.com/keyruu/traversetown-htmx/views/components"
 
 templ Page(title string) {
 	<!DOCTYPE html>
-	<html>
+	<html lang="en">
 		<head>
 			<title>{ title }</title>
 			<script src="https://unpkg.com/htmx.org@1.9.12"></script>
 			<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 			<link defer rel="stylesheet" href="/main.css"/>
+			<link rel="icon" href="/favicon-32x32.png" type="image/png"/>
 			<script defer src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
+			<script defer src="https://sorryihavetodothis.keyruu.de/js/script.js" data-domain="keyruu.de"></script>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 		</head>
 		<style>
 			#body {
