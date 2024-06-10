@@ -35,7 +35,7 @@ func (h *HandleController) getFullstacks(stackType string, fullstacks *[]models.
 
 func (h *HandleController) getReleases(releases *[]models.Releases) error {
 	err := h.dao.DB().
-		NewQuery("SELECT * FROM releases ORDER BY `releaseDate`").
+		NewQuery("SELECT * FROM releases ORDER BY `releaseDate` DESC").
 		All(&releases)
 
 	return err
