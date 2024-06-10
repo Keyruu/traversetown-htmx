@@ -54,10 +54,9 @@ func main() {
 		controller := handler.NewController(app.Dao())
 
 		e.Router.GET("/", controller.IndexHandler)
-		// e.Router.GET("/body/index", controller.IndexBodyHandler)
 
-		e.Router.GET("/music", controller.MusicHandler)
-		// e.Router.GET("/main/music", controller.MusicMainHandler)
+		e.Router.GET("/music", controller.MusicRedirectHandler)
+		e.Router.GET("/music/:slug", controller.MusicHandler)
 
 		e.Router.GET("/fullstack", controller.FullstackHandler)
 

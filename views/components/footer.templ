@@ -1,0 +1,42 @@
+package components
+
+css bgColor(color string) {
+	background-color: { color };
+}
+
+templ socialLink(icon, service, link, highlightColor string) {
+	<a href={ templ.SafeURL(link) } target="_blank" rel="keyruu.de" aria-label={ "Link to " + service }>
+		<span
+			class={ "iconify", icon, "transition duration-500 hover:scale-110 w-6 h-6 ml-3",
+        bgColor(highlightColor) }
+		></span>
+	</a>
+}
+
+templ Footer() {
+	<footer class="text-gray-600 body-font">
+		<div class="bg-zinc-800">
+			<div class="mx-auto py-4 px-5 flex flex-wrap flex-col sm:flex-row items-center">
+				<div>
+					<p class="text-gray-500 text-sm text-center sm:text-left">
+						© 2024 Keyruu / <a href="/imprint" class="hover:underline">Imprint</a>
+					</p>
+				</div>
+				<style>
+          @scope (#socials) {
+            span.iconify:not(:hover) {
+              background-color: #6b7280 !important;
+            }
+          }
+        </style>
+				<span id="socials" class="inline-flex sm:ml-auto sm:mt-0 mt-2 justify-center sm:justify-start">
+					@socialLink("mdi--github", "GitHub", "https://github.com/Keyruu", "#fff")
+					@socialLink("mdi--twitter", "Twitter", "https://twitter.com/KeyruuStreams", "#1DA1F2")
+					@socialLink("mdi--linkedin", "LinkedIn", "https://www.linkedin.com/in/lucasrott/", "#3375b0")
+					@socialLink("mdi--discord", "Discord", "https://discord.gg/XYUmUeFwA7", "#5865F2")
+					@socialLink("mdi--instagram", "Instagram", "https://www.instagram.com/iamkeyruu/?hl=de", "#e1306c")
+				</span>
+			</div>
+		</div>
+	</footer>
+}

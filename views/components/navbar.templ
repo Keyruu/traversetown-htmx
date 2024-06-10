@@ -1,9 +1,10 @@
 package components
 
 import "github.com/keyruu/traversetown-htmx/utils"
+import "strings"
 
 func isPath(ctx context.Context, path string) bool {
-	return ctx.Value(utils.PathContextKey).(string) == path
+	return strings.HasPrefix(ctx.Value(utils.PathContextKey).(string), path)
 }
 
 templ Navbar() {
@@ -11,11 +12,12 @@ templ Navbar() {
 		<div class="grid grid-cols-3 lg:grid-cols-5 grid-rows-1 gap-1 w-full">
 			@NavLink("/likes", "likes", "left", "right")
 			@NavLink("/music", "music", "left", "right")
-			<div class="flex justify-center items-center text-2xl font-semibold">
-				<p
+			<div href="/" class="flex justify-center items-center text-2xl font-semibold">
+				<a
+					href="/"
 					class="hover:scale-110 transition duration-500 hover:bg-gradient-to-r hover:from-sky-400 hover:to-blue-700 
           bg-clip-text text-transparent bg-white"
-				>Keyruu</p>
+				>Keyruu</a>
 			</div>
 			@NavLink("/listens", "listens", "right", "left")
 			@NavLink("/about", "about", "right", "left")

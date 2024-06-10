@@ -2,11 +2,27 @@ package layouts
 
 import "github.com/keyruu/traversetown-htmx/views/components"
 
-templ Page(title string) {
+templ Meta(title, description, previewImage, ogType, ogUrl string) {
+	<title>{ title }</title>
+	<meta name="description" content={ description }/>
+	<meta property="og:title" content={ title }/>
+	<meta property="og:description" content={ description }/>
+	<meta property="og:image" content={ previewImage }/>
+	<meta property="og:type" content={ ogType }/>
+	<meta property="og:url" content={ ogUrl }/>
+	<meta name="twitter:card" content="summary"/>
+	<meta name="twitter:site" content="@KeyruuStreams"/>
+	<meta name="twitter:creator" content="@KeyruuStreams"/>
+	<meta name="twitter:title" content={ title }/>
+	<meta name="twitter:description" content={ description }/>
+	<meta name="twitter:image" content={ previewImage }/>
+	<meta name="theme-color" content="#121212"/>
+}
+
+templ Page(title, description, previewImage, ogType, ogUrl string) {
 	<!DOCTYPE html>
 	<html lang="en">
 		<head>
-			<title>{ title }</title>
 			<script src="https://unpkg.com/htmx.org@1.9.12"></script>
 			<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 			<link defer rel="stylesheet" href="/main.css"/>
@@ -14,10 +30,11 @@ templ Page(title string) {
 			<script defer src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
 			<script defer src="https://sorryihavetodothis.keyruu.de/js/script.js" data-domain="keyruu.de"></script>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			@Meta(title, description, previewImage, ogType, ogUrl)
 		</head>
 		<style>
 			#body {
-				cursor: url('key_cursor.png'), auto;
+				cursor: url('/key_cursor.png'), auto;
 			}
 		</style>
 		<body id="body" class="bg-[#121212] text-white">
@@ -34,4 +51,5 @@ templ Body() {
 	<main id="main">
 		{ children... }
 	</main>
+	@components.Footer()
 }

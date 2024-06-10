@@ -1,10 +1,21 @@
 package music
 
 import "github.com/keyruu/traversetown-htmx/views/layouts"
+import "github.com/keyruu/traversetown-htmx/models"
+import "fmt"
+import "github.com/keyruu/traversetown-htmx/utils"
+import "github.com/keyruu/traversetown-htmx/views/components"
 
-templ Page() {
-	@layouts.Page("Music") {
-		@Main()
+templ Page(releases []models.Releases, selectedIndex int) {
+	@layouts.Page("Keyruu - "+releases[selectedIndex].Songtitle,
+		fmt.Sprintf("Featuring %s. Find apple music, spotify and youtube links here.",
+			releases[selectedIndex].Songtitle),
+		utils.ResizeURL(releases[selectedIndex].Cover, 600, 600),
+		"music.song",
+		fmt.Sprintf("%s/music/%s", utils.GetEnv(ctx).BaseUrl, releases[selectedIndex].Slug)) {
+		<div class="py-40">
+			@components.Releases(releases, selectedIndex, true)
+		</div>
 	}
 }
 

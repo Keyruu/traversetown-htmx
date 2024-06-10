@@ -6,8 +6,8 @@ import "github.com/keyruu/traversetown-htmx/utils"
 templ stackButton(name string, selected bool) {
 	<h1
 		class={ "m-4 lg:m-6 font-bold text-sm lg:text-xl p-2 lg:p-4 border-[1px]",
-    "hover:bg-white hover:text-black cursor-pointer uppercase",
-    templ.KV("bg-white text-black", selected) }
+			"hover:bg-white hover:text-black cursor-pointer uppercase",
+			templ.KV("bg-white text-black", selected) }
 		hx-get={ "/fullstack?type=" + name }
 		hx-target="#fullstack"
 	>{ name }</h1>
@@ -15,43 +15,45 @@ templ stackButton(name string, selected bool) {
 
 templ Fullstack(stack []models.Fullstack, selected string) {
 	<style>
-		.fullstack {
-			background-repeat: no-repeat;
-			background-size: cover;
-		}
-
-		li.stack-item {
-			animation: fadeIn 1s ease both;
-		}
-
-		li.stack-item:nth-child(2) {
-			animation-delay: 100ms;
-		}
-
-		li.stack-item:nth-child(3) {
-			animation-delay: 200ms;
-		}
-
-		li.stack-item:nth-child(4) {
-			animation-delay: 300ms;
-		}
-
-		li.stack-item:nth-child(5) {
-			animation-delay: 400ms;
-		}
-
-		li.stack-item:nth-child(6) {
-			animation-delay: 500ms;
-		}
-
-		@keyframes fadeIn {
-			from {
-				opacity: 0;
-				transform: translate3d(0, -20%, 0);
+		@scope (#fullstack-content) {
+			.fullstack {
+				background-repeat: no-repeat;
+				background-size: cover;
 			}
-			to {
-				opacity: 1;
-				transform: translate3d(0, 0, 0);
+
+			li.stack-item {
+				animation: fadeIn 1s ease both;
+			}
+
+			li.stack-item:nth-child(2) {
+				animation-delay: 100ms;
+			}
+
+			li.stack-item:nth-child(3) {
+				animation-delay: 200ms;
+			}
+
+			li.stack-item:nth-child(4) {
+				animation-delay: 300ms;
+			}
+
+			li.stack-item:nth-child(5) {
+				animation-delay: 400ms;
+			}
+
+			li.stack-item:nth-child(6) {
+				animation-delay: 500ms;
+			}
+
+			@keyframes fadeIn {
+				from {
+					opacity: 0;
+					transform: translate3d(0, -20%, 0);
+				}
+				to {
+					opacity: 1;
+					transform: translate3d(0, 0, 0);
+				}
 			}
 		}
 	</style>

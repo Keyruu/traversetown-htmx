@@ -8,7 +8,13 @@ import (
 )
 
 templ Page(releases []models.Releases, devops []models.Fullstack) {
-	@layouts.Page("Such wow!") {
+	@layouts.Page("Keyruu",
+		"Personal website of Keyruu aka Lucas. Keyruu is a DevOps Engineer and full-stack developer. "+
+			"He also does music (hyperpop, rap, pop) and design. "+
+			"He uses Svelte, Vue, Java, Quarkus, GraphQL, Kubernetes, Helm, Hetzner, Go and Rust.",
+		"/ogImages/index.png",
+		"website",
+		utils.GetEnv(ctx).BaseUrl) {
 		@Main(releases, devops)
 	}
 }
