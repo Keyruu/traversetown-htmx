@@ -53,6 +53,8 @@ func main() {
 
 		controller := handler.NewController(app.Dao())
 
+		e.Router.GET("/sidebar", controller.SidebarHandler)
+
 		e.Router.GET("/", controller.IndexHandler)
 
 		e.Router.GET("/music", controller.MusicRedirectHandler)

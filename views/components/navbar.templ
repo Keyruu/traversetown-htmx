@@ -7,11 +7,46 @@ func isPath(ctx context.Context, path string) bool {
 	return strings.HasPrefix(ctx.Value(utils.PathContextKey).(string), path)
 }
 
+templ Sidebar() {
+	<div id="sidebar-content" class="transition duration-500 ease-in fixed top-0 right-0 h-full w-64 bg-[#1f1f1f] border-r border-[#333] flex z-[100]">
+		<div class="flex-1 p-10 text-2xl flex justify-center flex-col">
+			<span
+				class="mb-6 absolute top-2 right-2 iconify mdi--close"
+				hx-delete="data:text/html,"
+				hx-target="#sidebar-content"
+				hx-swap="outerHTML swap:1s"
+			></span>
+			@NavLink("/", "home", "left", "right", "mb-6")
+			@NavLink("/likes", "likes", "left", "right", "mb-6")
+			@NavLink("/music", "music", "left", "right", "mb-6")
+			@NavLink("/listens", "listens", "left", "right", "mb-6")
+			@NavLink("/about", "about", "left", "right", "")
+		</div>
+	</div>
+}
+
 templ Navbar() {
+	<style>
+    @scope (#sidebar) {
+      #sidebar-content.htmx-added {
+        transform: translateX(100%);
+      }
+
+      #sidebar-content.htmx-swapping {
+        transform: translateX(100%);
+      }
+
+      #sidebar-content {
+        transform: translateX(0);
+      }
+    }
+  </style>
+	<div id="sidebar"></div>
 	<nav id="navbar" class="bg-[#121212] z-50 fixed w-screen h-24 flex justify-center">
 		<div class="grid grid-cols-3 lg:grid-cols-5 grid-rows-1 gap-1 w-full">
-			@NavLink("/likes", "likes", "left", "right")
-			@NavLink("/music", "music", "left", "right")
+			<div class="lg:hidden"></div>
+			@NavLink("/likes", "likes", "left", "right", "hidden lg:flex")
+			@NavLink("/music", "music", "left", "right", "hidden lg:flex")
 			<div href="/" class="flex justify-center items-center text-2xl font-semibold">
 				<a
 					href="/"
@@ -19,10 +54,10 @@ templ Navbar() {
           bg-clip-text text-transparent bg-white"
 				>Keyruu</a>
 			</div>
-			@NavLink("/listens", "listens", "right", "left")
-			@NavLink("/about", "about", "right", "left")
+			@NavLink("/listens", "listens", "right", "left", "hidden lg:flex")
+			@NavLink("/about", "about", "right", "left", "hidden lg:flex")
 			<div class="flex justify-center items-center lg:hidden">
-				<button variant="link" class="h-8 w-8" icon="i-mdi-menu" @click="slideoverOpen = true"></button>
+				<span class="h-8 w-8 iconify mdi--menu" hx-get="/sidebar" hx-target="#sidebar"></span>
 			</div>
 		</div>
 	</nav>
@@ -90,8 +125,8 @@ templ Navbar() {
   </style>
 }
 
-templ NavLink(to, text, direction, opposite string) {
-	<div class="flex justify-center items-center">
+templ NavLink(to, text, direction, opposite, extra string) {
+	<div class={ "flex justify-center items-center", extra }>
 		<a
 			href={ templ.SafeURL(to) }
 			class={ "cursor-pointer",

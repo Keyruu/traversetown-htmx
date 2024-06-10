@@ -41,6 +41,10 @@ func (h *HandleController) getReleases(releases *[]models.Releases) error {
 	return err
 }
 
+func (h *HandleController) SidebarHandler(c echo.Context) error {
+	return utils.Render(c, 200, components.Sidebar())
+}
+
 func (h *HandleController) IndexHandler(c echo.Context) error {
 	releases := []models.Releases{}
 	err := h.getReleases(&releases)

@@ -43,6 +43,9 @@ templ Releases(releases []models.Releases, initialSlide int, history bool) {
 	<script>
     function onSlideChange(event) {
       this.index = event.detail[0].activeIndex;
+			if(document.location.pathname.startsWith("/music")) {
+				document.title = `Keyruu - ${this.releases[this.index].songtitle}`;
+			}
     }
   </script>
 	<div class="text-gray-600 body-font my-auto overflow-hidden">
