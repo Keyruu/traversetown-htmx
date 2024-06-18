@@ -32,9 +32,9 @@ templ InfoBox(fullstacks []models.Fullstack) {
 								/>
 							</a>
 						</div>
-						<p class="mix-blend-difference hidden lg:flex">
+						<div class="mix-blend-difference hidden lg:block">
 							@templ.Raw(fullstack.Description)
-						</p>
+						</div>
 					</div>
 				</li>
 			}

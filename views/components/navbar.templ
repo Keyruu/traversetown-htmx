@@ -7,7 +7,7 @@ func isPath(ctx context.Context, path string) bool {
 	return strings.HasPrefix(ctx.Value(utils.PathContextKey).(string), path)
 }
 
-templ Sidebar() {
+templ Sidebar(selected string) {
 	<div id="sidebar-content" class="transition duration-500 ease-in fixed top-0 right-0 h-full w-64 bg-[#1f1f1f] border-r border-[#333] flex z-[100]">
 		<div class="flex-1 p-10 text-2xl flex justify-center flex-col">
 			<span
@@ -16,11 +16,11 @@ templ Sidebar() {
 				hx-target="#sidebar-content"
 				hx-swap="outerHTML swap:1s"
 			></span>
-			@NavLink("/", "home", "left", "right", "mb-6")
-			@NavLink("/likes", "likes", "left", "right", "mb-6")
-			@NavLink("/music", "music", "left", "right", "mb-6")
-			@NavLink("/listens", "listens", "left", "right", "mb-6")
-			@NavLink("/about", "about", "left", "right", "")
+			@NavLink("/", "home", "left", "right", "mb-6", selected == "/")
+			@NavLink("/likes", "likes", "left", "right", "mb-6", selected == "/likes")
+			@NavLink("/music", "music", "left", "right", "mb-6", strings.HasPrefix(selected, "/music"))
+			@NavLink("/listens", "listens", "left", "right", "mb-6", selected == "/listens")
+			@NavLink("/about", "about", "left", "right", "", selected == "/about")
 		</div>
 	</div>
 }
@@ -45,8 +45,8 @@ templ Navbar() {
 	<nav id="navbar" class="bg-[#121212] z-50 fixed w-screen h-24 flex justify-center">
 		<div class="grid grid-cols-3 lg:grid-cols-5 grid-rows-1 gap-1 w-full">
 			<div class="lg:hidden"></div>
-			@NavLink("/likes", "likes", "left", "right", "hidden lg:flex")
-			@NavLink("/music", "music", "left", "right", "hidden lg:flex")
+			@NavLink("/likes", "likes", "left", "right", "hidden lg:flex", isPath(ctx, "/likes"))
+			@NavLink("/music", "music", "left", "right", "hidden lg:flex", isPath(ctx, "/music"))
 			<div href="/" class="flex justify-center items-center text-2xl font-semibold">
 				<a
 					href="/"
@@ -54,15 +54,15 @@ templ Navbar() {
           bg-clip-text text-transparent bg-white"
 				>Keyruu</a>
 			</div>
-			@NavLink("/listens", "listens", "right", "left", "hidden lg:flex")
-			@NavLink("/about", "about", "right", "left", "hidden lg:flex")
+			@NavLink("/listens", "listens", "right", "left", "hidden lg:flex", isPath(ctx, "/listens"))
+			@NavLink("/about", "about", "right", "left", "hidden lg:flex", isPath(ctx, "/about"))
 			<div class="flex justify-center items-center lg:hidden">
 				<span class="h-8 w-8 iconify mdi--menu" hx-get="/sidebar" hx-target="#sidebar"></span>
 			</div>
 		</div>
 	</nav>
 	<style>
-    @scope (nav) {
+    @scope (body) {
       /* Underline From Left */
       .hvr-underline-from-left {
         display: inline-block;
@@ -125,14 +125,14 @@ templ Navbar() {
   </style>
 }
 
-templ NavLink(to, text, direction, opposite, extra string) {
+templ NavLink(to, text, direction, opposite, extra string, selected bool) {
 	<div class={ "flex justify-center items-center", extra }>
 		<a
 			href={ templ.SafeURL(to) }
 			class={ "cursor-pointer",
         "hvr-underline-from-" + direction,
-        templ.KV("before:" + opposite + "-full", !isPath(ctx, to)),
-        templ.KV("before:" + opposite + "-0", isPath(ctx, to)) }
+        templ.KV("before:" + opposite + "-full", !selected),
+        templ.KV("before:" + opposite + "-0", selected) }
 		>
 			{ text }
 		</a>

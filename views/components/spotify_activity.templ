@@ -1,0 +1,100 @@
+package components
+
+import "github.com/zmb3/spotify/v2"
+import "fmt"
+
+templ SpotifyActivity() {
+	<section
+		id="music"
+		class="py-24 flex bg-no-repeat bg-cover
+      items-center flex-col"
+	>
+		<div class="md:text-6xl text-4xl z-10 sm:mb-24 mb-16 flex">
+			<p class="font-extralight">my&nbsp;</p>
+			<p
+				class="hover:text-green-600 md:w-56 w-32 text-center align-middle spotify"
+			>
+				spotify&nbsp;
+			</p>
+			<p class="font-extralight">activity:</p>
+		</div>
+		<div hx-ext="sse" sse-connect="/spotify?stream=time" sse-swap="message" hx-swap="innerHTML" id="sse">
+			<p class="h-[500px]">
+				Waiting for song...
+			</p>
+		</div>
+	</section>
+	<style>
+    @scope (#music) {
+      #sse {
+        transition: all 0.2s ease-in-out;
+      }
+
+      .cover {
+        height: 37vh;
+        width: 37vh;
+        transition: translate 0.1s ease, transform 0.3s ease-in-out;
+      }
+
+      .song-info {
+        transition: transform 0.3s ease;
+      }
+
+      .song-progress {
+        transition: width 5s linear;
+      }
+
+      .container {
+        display: grid;
+      }
+
+      .content,
+      .overlay {
+        grid-area: 1 / 1;
+      }
+    }
+  </style>
+}
+
+templ CurrentTrack(currentlyPlaying spotify.CurrentlyPlaying) {
+	<div id="spotify" class="flex spotify flex-col items-center justify-center">
+		<a
+			class="w-auto container cover cursor-pointer relative"
+			href={ templ.SafeURL(currentlyPlaying.Item.ExternalURLs["spotify"]) }
+			target="_blank"
+			rel="noreferrer"
+		>
+			<div
+				class="w-full h-1.5 bg-neutral opacity-80 z-10 content bottom-0 rounded-b-lg absolute"
+			>
+				<div
+					id="progress"
+					class={ "h-1.5 rounded-bl-lg bg-slate-100 song-progress" }
+					{ templ.Attributes{"style": "width: " + fmt.Sprint(float32(currentlyPlaying.Progress) / float32(currentlyPlaying.Item.Duration) * 100) + "%;"}... }
+				></div>
+			</div>
+			<img
+				ref="img"
+				aspect-ratio="1/1"
+				crossorigin="anonymous"
+				class="rounded-lg shadow-lg cover content"
+				src={ currentlyPlaying.Item.Album.Images[0].URL }
+				alt="albumCover"
+			/>
+			<div
+				class="content cover rounded-lg"
+			></div>
+		</a>
+		<div
+			class="h-full px-4 overflow-hidden text-center relative mt-8 py-0.5 font-extrabold song-info"
+		>
+			<div
+				class="title-font sm:text-4xl text-3xl font-medium flex"
+			>
+				<p class="font-semibold">{ currentlyPlaying.Item.Name }</p>
+				&nbsp;—&nbsp;
+				<p class="font-light">{ currentlyPlaying.Item.Artists[0].Name }</p>
+			</div>
+		</div>
+	</div>
+}

@@ -25,7 +25,7 @@ templ Main(releases []models.Releases, devops []models.Fullstack) {
 			components.Bg(utils.GetEnv(ctx).BaseUrl + "/gradient/main-gradient.png", 1440, 640) }
 	>
 		<div class="flex-grow flex items-center justify-center">
-			<img src={ utils.WebpURL(utils.GetEnv(ctx).BaseUrl + "/keyruu_logo.png") } alt="Keyruu"/>
+			<img class="lg:h-72 w-auto h-40" src={ utils.WebpURL(utils.GetEnv(ctx).BaseUrl + "/keyruu_logo.png") } alt="Keyruu"/>
 		</div>
 		<div class="flex items-end justify-center">
 			<span class="iconify mdi--arrow-down h-10 w-10 text-white mb-28"></span>
@@ -35,7 +35,11 @@ templ Main(releases []models.Releases, devops []models.Fullstack) {
 	<section id="fullstack" class="flex sm:flex-row flex-col justify-center items-center text-center w-full mb-20">
 		@components.Fullstack(devops, "devops")
 	</section>
-	<section id="releases" class="m-20">
+	<section id="releases" class="my-20">
 		@components.Releases(releases, 0, false)
 	</section>
+	<section id="haveilistenedto" class="bg-neutral">
+		@components.HaveIListenedTo()
+	</section>
+	@components.SpotifyActivity()
 }

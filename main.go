@@ -11,6 +11,7 @@ import (
 	_ "github.com/keyruu/traversetown-htmx/migrations"
 	"github.com/keyruu/traversetown-htmx/utils"
 	"github.com/labstack/echo/v5"
+	"github.com/r3labs/sse/v2"
 
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/apis"
@@ -27,6 +28,14 @@ func main() {
 	}
 
 	env := config.NewEnv()
+
+	server := sse.New()             // create SSE broadcaster server
+	server.AutoReplay = true        // do not replay messages for each new subscriber that connects
+	_ = server.CreateStream("time") // EventSource in "index.html" connecting to stream named "time"
+
+	spotifyController := handler.NewSpotifyController(server, env)
+
+	go spotifyController.SpotifyActivityTicker()
 
 	// loosely check if it was executed using "go run"
 	isDev := env.Environment == "dev"
@@ -51,9 +60,21 @@ func main() {
 			}
 		})
 
-		controller := handler.NewController(app.Dao())
+		controller := handler.NewController(app.Dao(), env)
 
 		e.Router.GET("/sidebar", controller.SidebarHandler)
+		e.Router.PUT("/lastfm", controller.LastfmHandler)
+		e.Router.GET("/spotify", func(c echo.Context) error { // longer variant with disconnect logic
+			log.Printf("The client is connected: %v\n", c.RealIP())
+			go func() {
+				<-c.Request().Context().Done() // Received Browser Disconnection
+				log.Printf("The client is disconnected: %v\n", c.RealIP())
+				return
+			}()
+
+			server.ServeHTTP(c.Response(), c.Request())
+			return nil
+		})
 
 		e.Router.GET("/", controller.IndexHandler)
 
