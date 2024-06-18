@@ -6,14 +6,19 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"image"
 	"log"
 	"net/http"
 	"net/url"
 	"strings"
 	"time"
 
+	"github.com/cenkalti/dominantcolor"
 	"github.com/keyruu/traversetown-htmx/config"
+	"github.com/keyruu/traversetown-htmx/models"
+	"github.com/keyruu/traversetown-htmx/utils"
 	"github.com/keyruu/traversetown-htmx/views/components"
+	"github.com/pocketbase/pocketbase/daos"
 	"github.com/r3labs/sse/v2"
 	"github.com/zmb3/spotify/v2"
 	spotifyauth "github.com/zmb3/spotify/v2/auth"
@@ -22,11 +27,12 @@ import (
 
 type SpotifyController struct {
 	server *sse.Server
+	dao    *daos.Dao
 	env    *config.Env
 }
 
-func NewSpotifyController(server *sse.Server, env *config.Env) *SpotifyController {
-	return &SpotifyController{server: server, env: env}
+func NewSpotifyController(server *sse.Server, dao *daos.Dao, env *config.Env) *SpotifyController {
+	return &SpotifyController{server: server, dao: dao, env: env}
 }
 
 func getTokenFromRefresh(refreshToken, clientId, clientSecret string) (*oauth2.Token, error) {
@@ -83,16 +89,65 @@ func (c *SpotifyController) SpotifyActivityTicker() {
 	for range ticker.C {
 		currentlyPlaying, err := client.PlayerCurrentlyPlaying(ctx)
 		if err != nil {
-			log.Fatalf("couldn't get features playlists: %v", err)
+			log.Printf("couldn't get features playlists: %v", err)
+			continue
 		}
+
+		activity := &models.SpotifyActivity{}
+
 		if currentlyPlaying.Item != nil {
-			fmt.Printf("Now playing: %s\n", currentlyPlaying.Item.Name)
-			var buffer bytes.Buffer
-			components.CurrentTrack(*currentlyPlaying).Render(ctx, &buffer)
-			event := &sse.Event{
-				Data: buffer.Bytes(),
+			activity = c.saveCurrent(currentlyPlaying)
+		} else {
+			err = c.dao.DB().NewQuery("SELECT * FROM spotify_activity").One(&activity)
+			if err != nil {
+				log.Printf("couldn't get spotify activity: %v", err)
 			}
-			c.server.Publish("time", event)
+
+			activity.IsPlaying = false
 		}
+
+		log.Printf("Now playing: %s - %s\n", activity.TrackName, activity.ArtistName)
+		var buffer bytes.Buffer
+		components.CurrentTrack(activity).Render(ctx, &buffer)
+		event := &sse.Event{
+			Data: buffer.Bytes(),
+		}
+		c.server.Publish("time", event)
 	}
+}
+
+func (c *SpotifyController) saveCurrent(current *spotify.CurrentlyPlaying) *models.SpotifyActivity {
+	spotifyActivity := models.SpotifyActivity{}
+
+	err := c.dao.DB().NewQuery("SELECT * FROM spotify_activity").One(&spotifyActivity)
+	if err != nil {
+		log.Printf("couldn't get spotify activity: %v", err)
+	}
+
+	if spotifyActivity.SpotifyId != string(current.Item.ID) {
+		resp, err := http.Get(utils.ResizeUrlJpeg(current.Item.Album.Images[0].URL, 100, 100))
+		if err != nil {
+			fmt.Println(err)
+		}
+		defer resp.Body.Close()
+
+		img, _, err := image.Decode(resp.Body)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		color := dominantcolor.Find(img)
+		spotifyActivity.DominantColor = fmt.Sprintf("#%02x%02x%02x", color.R, color.G, color.B)
+		spotifyActivity.IsTooDark = color.R+color.G+color.B < 150
+		log.Printf("Dominant color: %s", spotifyActivity.DominantColor)
+	}
+
+	spotifyActivity.SetCurrent(current)
+
+	err = c.dao.Save(&spotifyActivity)
+	if err != nil {
+		log.Printf("couldn't save spotify activity: %v", err)
+	}
+
+	return &spotifyActivity
 }

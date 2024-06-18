@@ -1,7 +1,9 @@
 package components
 
-import "github.com/zmb3/spotify/v2"
-import "fmt"
+import (
+	"fmt"
+	"github.com/keyruu/traversetown-htmx/models"
+)
 
 templ SpotifyActivity() {
 	<section
@@ -26,9 +28,14 @@ templ SpotifyActivity() {
 	</section>
 	<style>
     @scope (#music) {
-      #sse {
-        transition: all 0.2s ease-in-out;
-      }
+			.spotify {
+				font-weight: 400;
+				transition: font-weight 0.4s ease-in-out;
+			}
+
+      .spotify:hover {
+				font-weight: 700;
+			}
 
       .cover {
         height: 37vh;
@@ -56,44 +63,49 @@ templ SpotifyActivity() {
   </style>
 }
 
-templ CurrentTrack(currentlyPlaying spotify.CurrentlyPlaying) {
+css glow(color string) {
+	box-shadow: { "0 0 50px 15px "+color };
+}
+
+templ CurrentTrack(activity *models.SpotifyActivity) {
 	<div id="spotify" class="flex spotify flex-col items-center justify-center">
 		<a
 			class="w-auto container cover cursor-pointer relative"
-			href={ templ.SafeURL(currentlyPlaying.Item.ExternalURLs["spotify"]) }
+			href={ templ.SafeURL(activity.SongLink) }
 			target="_blank"
 			rel="noreferrer"
 		>
-			<div
-				class="w-full h-1.5 bg-neutral opacity-80 z-10 content bottom-0 rounded-b-lg absolute"
-			>
+			if (activity.IsPlaying) {
 				<div
-					id="progress"
-					class={ "h-1.5 rounded-bl-lg bg-slate-100 song-progress" }
-					{ templ.Attributes{"style": "width: " + fmt.Sprint(float32(currentlyPlaying.Progress) / float32(currentlyPlaying.Item.Duration) * 100) + "%;"}... }
-				></div>
-			</div>
+					class="w-full h-1.5 bg-neutral opacity-80 z-10 content bottom-0 rounded-b-lg absolute"
+				>
+					<div
+						id="progress"
+						class={ "h-1.5 rounded-bl-lg bg-slate-100 song-progress" }
+						{ templ.Attributes{"style": "width: " + fmt.Sprint(float32(activity.ProgressMs) / float32(activity.DurationMs) * 100) + "%;"}... }
+					></div>
+				</div>
+				<div class={ "content cover rounded-lg", glow(activity.DominantColor) }></div>
+			}
 			<img
 				ref="img"
 				aspect-ratio="1/1"
 				crossorigin="anonymous"
 				class="rounded-lg shadow-lg cover content"
-				src={ currentlyPlaying.Item.Album.Images[0].URL }
+				src={ activity.CoverUrl }
 				alt="albumCover"
 			/>
-			<div
-				class="content cover rounded-lg"
-			></div>
 		</a>
 		<div
-			class="h-full px-4 overflow-hidden text-center relative mt-8 py-0.5 font-extrabold song-info"
+			class={ "h-full px-4 overflow-hidden text-center relative mt-8 py-0.5 font-extrabold song-info", bg(activity.DominantColor) }
 		>
 			<div
-				class="title-font sm:text-4xl text-3xl font-medium flex"
+				class={ "title-font sm:text-4xl text-3xl font-medium flex", 
+				templ.KV("text-slate-300", activity.IsTooDark), templ.KV("text-gray-900", !activity.IsTooDark) }
 			>
-				<p class="font-semibold">{ currentlyPlaying.Item.Name }</p>
+				<p class="font-semibold">{ activity.TrackName }</p>
 				&nbsp;—&nbsp;
-				<p class="font-light">{ currentlyPlaying.Item.Artists[0].Name }</p>
+				<p class="font-light">{ activity.ArtistName }</p>
 			</div>
 		</div>
 	</div>

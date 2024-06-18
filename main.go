@@ -33,10 +33,6 @@ func main() {
 	server.AutoReplay = true        // do not replay messages for each new subscriber that connects
 	_ = server.CreateStream("time") // EventSource in "index.html" connecting to stream named "time"
 
-	spotifyController := handler.NewSpotifyController(server, env)
-
-	go spotifyController.SpotifyActivityTicker()
-
 	// loosely check if it was executed using "go run"
 	isDev := env.Environment == "dev"
 
@@ -50,6 +46,12 @@ func main() {
 
 	// serves static files from the provided public dir (if exists)
 	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
+		spotifyController := handler.NewSpotifyController(server, app.Dao(), env)
+
+		go spotifyController.SpotifyActivityTicker()
+
+		controller := handler.NewController(app.Dao(), env)
+
 		e.Router.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
 			return func(c echo.Context) error {
 				ctx := c.Request().Context()                           // Get context.Context from echo.Context
@@ -59,8 +61,6 @@ func main() {
 				return next(c)
 			}
 		})
-
-		controller := handler.NewController(app.Dao(), env)
 
 		e.Router.GET("/sidebar", controller.SidebarHandler)
 		e.Router.PUT("/lastfm", controller.LastfmHandler)
