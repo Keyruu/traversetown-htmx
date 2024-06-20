@@ -160,7 +160,6 @@ func (c *SpotifyController) saveCurrent(current *spotify.CurrentlyPlaying) *mode
 
 		color := dominantcolor.Find(img)
 		spotifyActivity.DominantColor = fmt.Sprintf("#%02x%02x%02x", color.R, color.G, color.B)
-		spotifyActivity.IsTooDark = color.R+color.G+color.B < 150
 		log.Printf("Dominant color: %s", spotifyActivity.DominantColor)
 	}
 

@@ -20,7 +20,6 @@ type SpotifyActivity struct {
 	IsPlaying     bool   `db:"isPlaying" json:"isPlaying"`
 	ProgressMs    int    `db:"progressMs" json:"progressMs"`
 	DurationMs    int    `db:"durationMs" json:"durationMs"`
-	IsTooDark     bool   `db:"isTooDark" json:"isTooDark"`
 }
 
 func (m *SpotifyActivity) TableName() string {
