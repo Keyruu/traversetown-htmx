@@ -2,7 +2,11 @@ package components
 
 import "github.com/keyruu/traversetown-htmx/utils"
 
-css Bg(url string, smallerWidth int, smallerHeight int) {
+css Bg(color string) {
+	background-color: { color };
+}
+
+css BgWithScaling(url string, smallerWidth int, smallerHeight int) {
 	background-image: { templ.SafeCSSProperty("image-set(url('" + 
 		utils.ResizeURL(url, smallerWidth, smallerHeight) + "') 1x, url('" + utils.WebpURL(url) + "') 2x)") };
 }

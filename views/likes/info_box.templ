@@ -1,4 +1,4 @@
-package components
+package likes
 
 import (
 	"fmt"
@@ -27,7 +27,8 @@ templ InfoBox(fullstacks []models.Fullstack) {
 									src={ utils.WebpURL(utils.GetEnv(ctx).BaseUrl + fullstackImagePath(fullstack)) }
 									alt={ fullstack.Name }
 									height="60"
-									class="object-contain h-[60px] w-[60px] lg:w-full"
+									class="object-contain h-[60px] w-[60px] lg:w-full
+										transition-all duration-300 ease-in-out hover:scale-110"
 									format="webp"
 								/>
 							</a>

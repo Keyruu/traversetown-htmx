@@ -1,0 +1,19 @@
+package listens
+
+import "github.com/keyruu/traversetown-htmx/views/layouts"
+import "github.com/keyruu/traversetown-htmx/utils"
+
+templ Page() {
+	@layouts.Page("Keyruu listens to...",
+		"Keyruu likes a whole range of different music. For example metal, rap, pop, hyperpop, rock and more. "+
+			"Find out what he listens to here. You can either check how often he listened to an artist or checkout his spotify activity.",
+		"/ogImages/listens.png",
+		"website",
+		utils.GetEnv(ctx).BaseUrl+"/listens",
+	) {
+		<div class="lg:my-32 overflow-x-hidden">
+			@HaveIListenedTo()
+			@SpotifyActivity()
+		</div>
+	}
+}

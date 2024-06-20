@@ -1,7 +1,8 @@
-package components
+package likes
 
 import "github.com/keyruu/traversetown-htmx/models"
 import "github.com/keyruu/traversetown-htmx/utils"
+import "github.com/keyruu/traversetown-htmx/views/components"
 
 templ stackButton(name string, selected bool) {
 	<h1
@@ -65,7 +66,7 @@ templ Fullstack(stack []models.Fullstack, selected string) {
 		</div>
 		<div
 			class={ "fullstack w-screen flex justify-center items-center py-14 h-[66vh]", 
-			Bg(utils.GetEnv(ctx).BaseUrl + "/gradient/subtle-gradient.png", 1440, 640) }
+			components.BgWithScaling(utils.GetEnv(ctx).BaseUrl + "/gradient/subtle-gradient.png", 1440, 640) }
 		>
 			@InfoBox(stack)
 		</div>

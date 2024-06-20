@@ -1,15 +1,12 @@
-package components
+package music
 
 import (
 	"fmt"
 
 	"github.com/keyruu/traversetown-htmx/models"
 	"github.com/keyruu/traversetown-htmx/utils"
+	"github.com/keyruu/traversetown-htmx/views/components"
 )
-
-css bg(color string) {
-	background-color: { color };
-}
 
 func imagePath(release models.Releases) string {
 	return fmt.Sprintf("/api/files/releases/%s/%s", release.Id, release.Cover)
@@ -31,7 +28,7 @@ templ Cover(release models.Releases) {
 		<img
 			srcset={ srcset(release, utils.GetEnv(ctx).BaseUrl) }
 			sizes={ sizes() }
-			class={ bg(release.PrimaryColor), "h-[45vw] lg:h-[30vw]" }
+			class={ components.Bg(release.PrimaryColor), "h-[45vw] lg:h-[30vw]" }
 			aspect-ratio="1/1"
 		/>
 	</div>

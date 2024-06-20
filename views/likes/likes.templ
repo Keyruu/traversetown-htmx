@@ -1,0 +1,32 @@
+package likes
+
+import "github.com/keyruu/traversetown-htmx/views/layouts"
+import "github.com/keyruu/traversetown-htmx/utils"
+import "github.com/keyruu/traversetown-htmx/models"
+
+templ Likes(likes []string, extra string) {
+	<ul
+		class="personal-text w-full flex justify-center overflow-x-clip"
+	>
+		for _, like := range likes {
+			<li
+				class={ "lg:text-7xl md:text-7xl text-4xl uppercase hover:-translate-y-4 transition duration-200 ease-out", extra }
+			>
+				{ like }
+			</li>
+		}
+	</ul>
+}
+
+templ Page(devops []models.Fullstack) {
+	@layouts.Page("Keyruu likes...",
+		"Keyruu likes a lot of different things. Find out what he likes here. "+
+			"This has tech prefences but also general stuff he likes. For example Spezi, Design, Svelte, Vue, Rust and Spezi.",
+		"/ogImages/likes.png",
+		"website",
+		utils.GetEnv(ctx).BaseUrl+"/likes",
+	) {
+		@ILike()
+		@Fullstack(devops, "devops")
+	}
+}

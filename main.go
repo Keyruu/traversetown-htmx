@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 
@@ -29,9 +30,9 @@ func main() {
 
 	env := config.NewEnv()
 
-	server := sse.New()             // create SSE broadcaster server
-	server.AutoReplay = true        // do not replay messages for each new subscriber that connects
-	_ = server.CreateStream("time") // EventSource in "index.html" connecting to stream named "time"
+	server := sse.New()                // create SSE broadcaster server
+	server.AutoReplay = true           // do not replay messages for each new subscriber that connects
+	_ = server.CreateStream("spotify") // EventSource in "index.html" connecting to stream named "time"
 
 	// loosely check if it was executed using "go run"
 	isDev := env.Environment == "dev"
@@ -50,7 +51,7 @@ func main() {
 
 		go spotifyController.SpotifyActivityTicker()
 
-		controller := handler.NewController(app.Dao(), env)
+		controller := handler.NewController(app.Dao(), env, app.Logger())
 
 		e.Router.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
 			return func(c echo.Context) error {
@@ -63,13 +64,19 @@ func main() {
 		})
 
 		e.Router.GET("/sidebar", controller.SidebarHandler)
+		e.Router.DELETE("/sidebar", func(c echo.Context) error {
+			return c.HTML(200, "")
+		})
+
+		e.Router.GET("/fullstack", controller.FullstackHandler)
+
 		e.Router.PUT("/lastfm", controller.LastfmHandler)
+
 		e.Router.GET("/spotify", func(c echo.Context) error { // longer variant with disconnect logic
-			log.Printf("The client is connected: %v\n", c.RealIP())
+			app.Logger().Info(fmt.Sprintf("A client is connected: %v", c.RealIP()))
 			go func() {
 				<-c.Request().Context().Done() // Received Browser Disconnection
-				log.Printf("The client is disconnected: %v\n", c.RealIP())
-				return
+				app.Logger().Info(fmt.Sprintf("The client is disconnected: %v", c.RealIP()))
 			}()
 
 			server.ServeHTTP(c.Response(), c.Request())
@@ -81,7 +88,13 @@ func main() {
 		e.Router.GET("/music", controller.MusicRedirectHandler)
 		e.Router.GET("/music/:slug", controller.MusicHandler)
 
-		e.Router.GET("/fullstack", controller.FullstackHandler)
+		e.Router.GET("/listens", controller.ListensHandler)
+
+		e.Router.GET("/likes", controller.LikesHandler)
+
+		e.Router.GET("/about", controller.AboutHandler)
+
+		e.Router.GET("/imprint", controller.ImprintHandler)
 
 		e.Router.GET("/*", apis.StaticDirectoryHandler(os.DirFS("./pb_public"), false))
 		return nil

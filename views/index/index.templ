@@ -2,9 +2,11 @@ package index
 
 import (
 	"github.com/keyruu/traversetown-htmx/models"
-	"github.com/keyruu/traversetown-htmx/views/components"
 	"github.com/keyruu/traversetown-htmx/views/layouts"
 	"github.com/keyruu/traversetown-htmx/utils"
+	"github.com/keyruu/traversetown-htmx/views/listens"
+	"github.com/keyruu/traversetown-htmx/views/music"
+	"github.com/keyruu/traversetown-htmx/views/likes"
 )
 
 templ Page(releases []models.Releases, devops []models.Fullstack) {
@@ -21,25 +23,43 @@ templ Page(releases []models.Releases, devops []models.Fullstack) {
 
 templ Main(releases []models.Releases, devops []models.Fullstack) {
 	<div
-		class={ "w-full h-screen bg-no-repeat bg-cover flex justify-center items-center flex-col",
-			components.Bg(utils.GetEnv(ctx).BaseUrl + "/gradient/main-gradient.png", 1440, 640) }
+		class={ "w-full h-screen gradient-background bg-no-repeat bg-cover flex justify-center items-center flex-col" }
 	>
 		<div class="flex-grow flex items-center justify-center">
 			<img class="lg:h-72 w-auto h-40" src={ utils.WebpURL(utils.GetEnv(ctx).BaseUrl + "/keyruu_logo.png") } alt="Keyruu"/>
 		</div>
 		<div class="flex items-end justify-center">
-			<span class="iconify mdi--arrow-down h-10 w-10 text-white mb-28"></span>
+			<span class="iconify mdi--arrow-down h-10 w-10 text-white mb-28 animate-bounce duration-[2s]"></span>
 		</div>
 	</div>
-	@components.ILike()
+	@likes.ILike()
 	<section id="fullstack" class="flex sm:flex-row flex-col justify-center items-center text-center w-full mb-20">
-		@components.Fullstack(devops, "devops")
+		@likes.Fullstack(devops, "devops")
 	</section>
 	<section id="releases" class="my-20">
-		@components.Releases(releases, 0, false)
+		@music.Releases(releases, 0, false)
 	</section>
 	<section id="haveilistenedto" class="bg-neutral">
-		@components.HaveIListenedTo()
+		@listens.HaveIListenedTo()
 	</section>
-	@components.SpotifyActivity()
+	@listens.SpotifyActivity()
+	<style type="text/css">
+		.gradient-background {
+			background: linear-gradient(300deg,deepskyblue,#000000,#0018eb);
+			background-size: 180% 180%;
+			animation: gradient-animation 15s ease-in-out infinite;
+		}
+
+		@keyframes gradient-animation {
+			0% {
+				background-position: 0% 50%;
+			}
+			50% {
+				background-position: 100% 50%;
+			}
+			100% {
+				background-position: 0% 50%;
+			}
+		}
+	</style>
 }

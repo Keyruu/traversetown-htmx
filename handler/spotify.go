@@ -10,6 +10,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 	"time"
 
@@ -17,7 +18,7 @@ import (
 	"github.com/keyruu/traversetown-htmx/config"
 	"github.com/keyruu/traversetown-htmx/models"
 	"github.com/keyruu/traversetown-htmx/utils"
-	"github.com/keyruu/traversetown-htmx/views/components"
+	"github.com/keyruu/traversetown-htmx/views/listens"
 	"github.com/pocketbase/pocketbase/daos"
 	"github.com/r3labs/sse/v2"
 	"github.com/zmb3/spotify/v2"
@@ -35,7 +36,14 @@ func NewSpotifyController(server *sse.Server, dao *daos.Dao, env *config.Env) *S
 	return &SpotifyController{server: server, dao: dao, env: env}
 }
 
-func getTokenFromRefresh(refreshToken, clientId, clientSecret string) (*oauth2.Token, error) {
+type SpotifyToken struct {
+	AccessToken string `json:"access_token"`
+	TokenType   string `json:"token_type"`
+	ExpiresIn   int    `json:"expires_in"`
+	Scope       string `json:"scope"`
+}
+
+func getTokenFromRefresh(refreshToken, clientId, clientSecret string) (*SpotifyToken, error) {
 	data := url.Values{}
 	data.Set("grant_type", "refresh_token")
 	data.Set("refresh_token", refreshToken)
@@ -62,7 +70,7 @@ func getTokenFromRefresh(refreshToken, clientId, clientSecret string) (*oauth2.T
 	}
 	defer resp.Body.Close()
 
-	var response oauth2.Token
+	var response SpotifyToken
 
 	err = json.NewDecoder(resp.Body).Decode(&response)
 	if err != nil {
@@ -75,18 +83,19 @@ func getTokenFromRefresh(refreshToken, clientId, clientSecret string) (*oauth2.T
 func (c *SpotifyController) SpotifyActivityTicker() {
 	ctx := context.Background()
 
-	token, err := getTokenFromRefresh(c.env.SpotifyRefreshToken, c.env.SpotifyClientId, c.env.SpotifyClientSecret)
-	if err != nil {
-		log.Fatalf("couldn't get token: %v", err)
-	}
-
-	httpClient := spotifyauth.New().Client(ctx, token)
-	client := spotify.New(httpClient)
+	expiresAt, client := c.refreshClient(ctx)
 
 	ticker := time.NewTicker(5 * time.Second)
 	defer ticker.Stop()
 
 	for range ticker.C {
+		log.Printf("Token expires at: %v, now its %v\n", expiresAt, time.Now())
+		log.Printf("Is it after expires? %s\n", strconv.FormatBool(time.Now().After(expiresAt)))
+		if time.Now().After(expiresAt) {
+			log.Printf("Refreshing token")
+			expiresAt, client = c.refreshClient(ctx)
+		}
+
 		currentlyPlaying, err := client.PlayerCurrentlyPlaying(ctx)
 		if err != nil {
 			log.Printf("couldn't get features playlists: %v", err)
@@ -95,7 +104,7 @@ func (c *SpotifyController) SpotifyActivityTicker() {
 
 		activity := &models.SpotifyActivity{}
 
-		if currentlyPlaying.Item != nil {
+		if currentlyPlaying.Item != nil && len(currentlyPlaying.Item.Album.Images) > 0 {
 			activity = c.saveCurrent(currentlyPlaying)
 		} else {
 			err = c.dao.DB().NewQuery("SELECT * FROM spotify_activity").One(&activity)
@@ -108,12 +117,25 @@ func (c *SpotifyController) SpotifyActivityTicker() {
 
 		log.Printf("Now playing: %s - %s\n", activity.TrackName, activity.ArtistName)
 		var buffer bytes.Buffer
-		components.CurrentTrack(activity).Render(ctx, &buffer)
+		listens.CurrentTrack(activity).Render(ctx, &buffer)
 		event := &sse.Event{
 			Data: buffer.Bytes(),
 		}
-		c.server.Publish("time", event)
+		c.server.Publish("spotify", event)
 	}
+}
+
+func (c *SpotifyController) refreshClient(ctx context.Context) (time.Time, *spotify.Client) {
+	token, err := getTokenFromRefresh(c.env.SpotifyRefreshToken, c.env.SpotifyClientId, c.env.SpotifyClientSecret)
+	if err != nil {
+		log.Fatalf("couldn't get token: %v", err)
+	}
+
+	expiresAt := time.Now().Add(time.Duration(token.ExpiresIn)*time.Second - 1*time.Minute)
+
+	httpClient := spotifyauth.New().Client(ctx, &oauth2.Token{AccessToken: token.AccessToken})
+	client := spotify.New(httpClient)
+	return expiresAt, client
 }
 
 func (c *SpotifyController) saveCurrent(current *spotify.CurrentlyPlaying) *models.SpotifyActivity {

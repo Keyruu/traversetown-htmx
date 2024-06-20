@@ -4,7 +4,6 @@ import "github.com/keyruu/traversetown-htmx/views/layouts"
 import "github.com/keyruu/traversetown-htmx/models"
 import "fmt"
 import "github.com/keyruu/traversetown-htmx/utils"
-import "github.com/keyruu/traversetown-htmx/views/components"
 
 templ Page(releases []models.Releases, selectedIndex int) {
 	@layouts.Page("Keyruu - "+releases[selectedIndex].Songtitle,
@@ -14,7 +13,7 @@ templ Page(releases []models.Releases, selectedIndex int) {
 		"music.song",
 		fmt.Sprintf("%s/music/%s", utils.GetEnv(ctx).BaseUrl, releases[selectedIndex].Slug)) {
 		<div class="py-40">
-			@components.Releases(releases, selectedIndex, true)
+			@Releases(releases, selectedIndex, true)
 		</div>
 	}
 }

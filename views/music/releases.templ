@@ -1,4 +1,4 @@
-package components
+package music
 
 import (
 	"github.com/keyruu/traversetown-htmx/models"
@@ -40,7 +40,7 @@ templ iconLink(icon string, service string) {
 }
 
 templ Releases(releases []models.Releases, initialSlide int, history bool) {
-	<script>
+	<script type="text/javascript">
     function onSlideChange(event) {
       this.index = event.detail[0].activeIndex;
 			if(document.location.pathname.startsWith("/music")) {
@@ -86,7 +86,7 @@ templ Releases(releases []models.Releases, initialSlide int, history bool) {
 					<p x-text="releases[index].artists">test</p>
 				</h1>
 			</div>
-			<style>
+			<style type="text/css">
         @scope (#releaseIcons) {
           span:not(:hover) {
             background-color: gray !important;

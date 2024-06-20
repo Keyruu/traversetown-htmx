@@ -1,0 +1,98 @@
+package listens
+
+import (
+	"fmt"
+	"github.com/keyruu/traversetown-htmx/models"
+	"github.com/keyruu/traversetown-htmx/views/components"
+)
+
+templ SpotifyActivity() {
+	<section
+		id="music"
+		class="py-24 flex bg-no-repeat bg-cover
+      items-center flex-col"
+	>
+		<div class="md:text-6xl text-4xl z-10 sm:mb-24 mb-16 flex">
+			<p class="font-extralight">my&nbsp;</p>
+			<p
+				class="hover:text-green-600 md:w-56 w-32 text-center align-middle spotify
+					font-normal hover:font-bold transition-all duration-300 ease-in-out"
+			>
+				spotify&nbsp;
+			</p>
+			<p class="font-extralight">activity:</p>
+		</div>
+		<div hx-ext="sse" sse-connect="/spotify?stream=spotify" sse-swap="message" hx-swap="innerHTML" id="sse">
+			<p class="h-[500px]">
+				Waiting for song...
+			</p>
+		</div>
+	</section>
+	<style>
+    @scope (#music) {
+      .cover {
+        height: 37vh;
+        width: 37vh;
+      }
+
+      .content,
+      .overlay {
+        grid-area: 1 / 1;
+      }
+    }
+  </style>
+}
+
+css glow(color string) {
+	box-shadow: { "0 0 50px 15px "+color };
+}
+
+css bgButNot(color string) {
+	box-shadow: { "inset -1px -1px 100px 100px "+color };
+}
+
+templ CurrentTrack(activity *models.SpotifyActivity) {
+	<div id="spotify" class="flex spotify flex-col items-center justify-center">
+		<a
+			class="w-auto grid cover cursor-pointer relative rounded-lg"
+			href={ templ.SafeURL(activity.SongLink) }
+			target="_blank"
+			rel="noreferrer"
+		>
+			<div
+				id="progress"
+				class={ "h-2 z-10 content bottom-0 bg-white absolute",
+						"rounded-bl-lg overflow-hidden transition-all duration-[5s] ease-linear mix-blend-difference",
+						templ.KV("opacity-0", !activity.IsPlaying) }
+				{ templ.Attributes{"style": "width: " + fmt.Sprint(float32(activity.ProgressMs) / float32(activity.DurationMs) * 100) + "%;"}... }
+			></div>
+			<div
+				id="glow"
+				class={ "content cover rounded-lg transition-all duration-[5s]", glow(activity.DominantColor),
+					templ.KV("opacity-0", !activity.IsPlaying) }
+			></div>
+			<img
+				id="activity-img"
+				ref="img"
+				aspect-ratio="1/1"
+				crossorigin="anonymous"
+				class="rounded-lg shadow-lg cover content"
+				src={ activity.CoverUrl }
+				alt="albumCover"
+			/>
+		</a>
+		<div
+			id="song-info"
+			class={ "h-full px-4 overflow-hidden text-center relative mt-8 py-0.5 font-extrabold flex-wrap justify-center", 
+			components.Bg(activity.DominantColor), "transition-all duration-300" }
+		>
+			<div
+				class="title-font sm:text-4xl text-3xl font-medium flex text-wrap text-white mix-blend-difference"
+			>
+				<p class="font-semibold">{ activity.TrackName }</p>
+				&nbsp;—&nbsp;
+				<p class="font-light">{ activity.ArtistName }</p>
+			</div>
+		</div>
+	</div>
+}
