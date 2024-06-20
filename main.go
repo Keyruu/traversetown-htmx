@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/xml"
 	"fmt"
 	"log"
 	"os"
@@ -33,6 +34,8 @@ func main() {
 	server := sse.New()                // create SSE broadcaster server
 	server.AutoReplay = true           // do not replay messages for each new subscriber that connects
 	_ = server.CreateStream("spotify") // EventSource in "index.html" connecting to stream named "time"
+
+	urls := utils.NewUrlset()
 
 	// loosely check if it was executed using "go run"
 	isDev := env.Environment == "dev"
@@ -84,19 +87,34 @@ func main() {
 		})
 
 		e.Router.GET("/", controller.IndexHandler)
+		urls.AddUrl(utils.Url{Loc: env.BaseUrl + "/"})
 
 		e.Router.GET("/music", controller.MusicRedirectHandler)
 		e.Router.GET("/music/:slug", controller.MusicHandler)
+		controller.ReleasesSiteMap(urls)
 
 		e.Router.GET("/listens", controller.ListensHandler)
+		urls.AddUrl(utils.Url{Loc: env.BaseUrl + "/listens"})
 
 		e.Router.GET("/likes", controller.LikesHandler)
+		urls.AddUrl(utils.Url{Loc: env.BaseUrl + "/likes"})
 
 		e.Router.GET("/about", controller.AboutHandler)
+		urls.AddUrl(utils.Url{Loc: env.BaseUrl + "/about"})
 
 		e.Router.GET("/imprint", controller.ImprintHandler)
 
 		e.Router.GET("/*", apis.StaticDirectoryHandler(os.DirFS("./pb_public"), false))
+
+		bytes, err := xml.Marshal(urls)
+		if err != nil {
+			log.Fatalf("unable to marshal sitemap: %e", err)
+		}
+		err = os.WriteFile("pb_public/sitemap.xml", bytes, 0644)
+		if err != nil {
+			log.Fatalf("unable to write sitemap: %e", err)
+		}
+
 		return nil
 	})
 

@@ -5,4 +5,5 @@ tmp
 pb_data
 .env
 pb_public/main.css
+pb_public/sitemap.xml
 node_modules

@@ -53,3 +53,17 @@ func (h *HandleController) getReleases(releases *[]models.Releases) error {
 
 	return err
 }
+
+func (h *HandleController) ReleasesSiteMap(urls *utils.Urlset) error {
+	releases := []models.Releases{}
+	err := h.getReleases(&releases)
+	if err != nil {
+		return err
+	}
+
+	for _, release := range releases {
+		urls.AddUrl(utils.Url{Loc: fmt.Sprintf("%s/music/%s", h.env.BaseUrl, release.Slug)})
+	}
+
+	return nil
+}
