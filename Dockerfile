@@ -19,7 +19,7 @@ RUN apk update && apk add curl
 COPY --from=go-builder /app/out /app/out
 COPY --from=tailwind /app/pb_public /app/pb_public
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 CMD [ "curl localhost:8090" ]
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 CMD [ "curl", "localhost:8090" ]
 
 EXPOSE 8090
 ENTRYPOINT [ "/app/out" ]
