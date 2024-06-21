@@ -22,4 +22,5 @@ COPY --from=tailwind /app/pb_public /app/pb_public
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 CMD [ "curl localhost:8090" ]
 
 EXPOSE 8090
-CMD ["./out serve --http=0.0.0.0:8090"]
+ENTRYPOINT [ "/app/out" ]
+CMD ["serve",  "--http=0.0.0.0:8090"]
