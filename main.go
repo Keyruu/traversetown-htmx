@@ -75,6 +75,8 @@ func main() {
 
 		e.Router.PUT("/lastfm", controller.LastfmHandler)
 
+		e.Router.GET("/activity", controller.SpotifyActivityHandler)
+
 		e.Router.GET("/spotify", func(c echo.Context) error { // longer variant with disconnect logic
 			app.Logger().Info(fmt.Sprintf("A client is connected: %v", c.RealIP()))
 			go func() {

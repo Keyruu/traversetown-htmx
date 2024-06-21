@@ -42,7 +42,7 @@ templ Main(releases []models.Releases, devops []models.Fullstack) {
 	<section id="haveilistenedto" class="bg-neutral">
 		@listens.HaveIListenedTo()
 	</section>
-	@listens.SpotifyActivity()
+	<div hx-trigger="revealed" hx-get="/activity" hx-swap="outerHTML"></div>
 	<style type="text/css">
 		.gradient-background {
 			background: linear-gradient(300deg,deepskyblue,#000000,#0018eb);

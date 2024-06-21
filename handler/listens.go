@@ -17,6 +17,10 @@ func (h *HandleController) ListensHandler(c echo.Context) error {
 	return utils.Render(c, 200, listens.Page())
 }
 
+func (h *HandleController) SpotifyActivityHandler(c echo.Context) error {
+	return utils.Render(c, 200, listens.SpotifyActivity())
+}
+
 func (h *HandleController) getLastfmPlaycount(artist string) (int, error) {
 	resp, err := http.Get(
 		fmt.Sprintf("%s?method=artist.getinfo&artist=%s&api_key=%s&format=json&username=keyruu",
