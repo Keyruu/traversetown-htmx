@@ -14,7 +14,7 @@ RUN go build -o out
 FROM alpine:latest
 WORKDIR /app
 
-RUN apk add curl wget
+RUN apk update && apk add curl
 
 COPY --from=go-builder /app/out /app/out
 COPY --from=tailwind /app/pb_public /app/pb_public
