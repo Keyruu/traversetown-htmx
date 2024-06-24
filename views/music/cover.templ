@@ -8,15 +8,11 @@ import (
 	"github.com/keyruu/traversetown-htmx/views/components"
 )
 
-func imagePath(release models.Releases) string {
-	return fmt.Sprintf("/api/files/releases/%s/%s", release.Id, release.Cover)
-}
-
 func srcset(release models.Releases, base string) string {
-	url := base + imagePath(release)
-	return fmt.Sprintf("%s 3000w, %s 1500w, %s 900w, %s 600w, %s 300w",
-		utils.ResizeURL(url, 3000, 3000), utils.ResizeURL(url, 1500, 1500),
-		utils.ResizeURL(url, 900, 900), utils.ResizeURL(url, 600, 600), utils.ResizeURL(url, 300, 300))
+	url := base + utils.ReleasesImagePath(release)
+	return fmt.Sprintf("%s 1500w, %s 900w, %s 600w, %s 300w",
+		utils.ResizeURL(url, 1500, 1500), utils.ResizeURL(url, 900, 900),
+		utils.ResizeURL(url, 600, 600), utils.ResizeURL(url, 300, 300))
 }
 
 func sizes() string {
