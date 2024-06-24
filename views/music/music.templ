@@ -9,7 +9,7 @@ templ Page(releases []models.Releases, selectedIndex int) {
 	@layouts.Page("Keyruu - "+releases[selectedIndex].Songtitle,
 		fmt.Sprintf("Featuring %s. Find apple music, spotify and youtube links here.",
 			releases[selectedIndex].Artists),
-		utils.ResizeUrlJpeg(utils.ReleasesImagePath(releases[selectedIndex]), 600, 600),
+		utils.ResizeUrlJpeg(utils.GetEnv(ctx).BaseUrl+utils.ReleasesImagePath(releases[selectedIndex]), 600, 600),
 		"music.song",
 		fmt.Sprintf("%s/music/%s", utils.GetEnv(ctx).BaseUrl, releases[selectedIndex].Slug)) {
 		<div class="py-40">
