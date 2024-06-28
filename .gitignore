@@ -2,6 +2,7 @@ tmp
 .idea
 .vscode
 *_templ.go
+*_templ.txt
 pb_data
 .env
 pb_public/main.css

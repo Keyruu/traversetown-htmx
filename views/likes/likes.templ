@@ -27,6 +27,8 @@ templ Page(devops []models.Fullstack) {
 		utils.GetEnv(ctx).BaseUrl+"/likes",
 	) {
 		@ILike()
-		@Fullstack(devops, "devops")
+		<section id="fullstack">
+			@Fullstack(devops, "devops")
+		</section>
 	}
 }
