@@ -32,7 +32,7 @@ func main() {
 	env := config.NewEnv()
 
 	server := sse.New()                // create SSE broadcaster server
-	server.AutoReplay = true           // do not replay messages for each new subscriber that connects
+	server.AutoReplay = false          // do not replay messages for each new subscriber that connects
 	_ = server.CreateStream("spotify") // EventSource in "index.html" connecting to stream named "time"
 
 	urls := utils.NewUrlset()
