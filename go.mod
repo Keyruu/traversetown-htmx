@@ -3,7 +3,7 @@ module github.com/keyruu/traversetown-htmx
 go 1.22.1
 
 require (
-	github.com/a-h/templ v0.2.707
+	github.com/a-h/templ v0.2.731
 	github.com/caarlos0/env/v6 v6.10.1
 	github.com/cenkalti/dominantcolor v1.0.2
 	github.com/joho/godotenv v1.5.1

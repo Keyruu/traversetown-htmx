@@ -1,7 +1,10 @@
 package components
 
-import "github.com/keyruu/traversetown-htmx/utils"
-import "strings"
+import (
+	"github.com/keyruu/traversetown-htmx/utils"
+	"strings"
+	"context"
+)
 
 func isPath(ctx context.Context, path string) bool {
 	return strings.HasPrefix(ctx.Value(utils.PathContextKey).(string), path)
