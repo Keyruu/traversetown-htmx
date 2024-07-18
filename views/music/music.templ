@@ -1,9 +1,11 @@
 package music
 
-import "github.com/keyruu/traversetown-htmx/views/layouts"
-import "github.com/keyruu/traversetown-htmx/models"
-import "fmt"
-import "github.com/keyruu/traversetown-htmx/utils"
+import (
+	"fmt"
+	"github.com/keyruu/traversetown-htmx/models"
+	"github.com/keyruu/traversetown-htmx/utils"
+	"github.com/keyruu/traversetown-htmx/views/layouts"
+)
 
 templ Page(releases []models.Releases, selectedIndex int) {
 	@layouts.Page("Keyruu - "+releases[selectedIndex].Songtitle,
@@ -12,12 +14,8 @@ templ Page(releases []models.Releases, selectedIndex int) {
 		utils.ResizeUrlJpeg(utils.GetEnv(ctx).BaseUrl+utils.ReleasesImagePath(releases[selectedIndex]), 600, 600),
 		"music.song",
 		fmt.Sprintf("%s/music/%s", utils.GetEnv(ctx).BaseUrl, releases[selectedIndex].Slug)) {
-		<div class="py-40">
+		<div class="h-full flex justify-center items-center">
 			@Releases(releases, selectedIndex, true)
 		</div>
 	}
-}
-
-templ Main() {
-	<h1 class="p-36">Music</h1>
 }

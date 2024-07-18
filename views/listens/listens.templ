@@ -1,7 +1,9 @@
 package listens
 
-import "github.com/keyruu/traversetown-htmx/views/layouts"
-import "github.com/keyruu/traversetown-htmx/utils"
+import (
+	"github.com/keyruu/traversetown-htmx/utils"
+	"github.com/keyruu/traversetown-htmx/views/layouts"
+)
 
 templ Page() {
 	@layouts.Page("Keyruu listens to...",
@@ -11,7 +13,7 @@ templ Page() {
 		"website",
 		utils.GetEnv(ctx).BaseUrl+"/listens",
 	) {
-		<div class="lg:my-32 overflow-x-hidden">
+		<div class="overflow-x-hidden w-full">
 			@HaveIListenedTo()
 			@SpotifyActivity()
 		</div>

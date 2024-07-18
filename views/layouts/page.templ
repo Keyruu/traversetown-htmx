@@ -40,7 +40,7 @@ templ Page(title, description, previewImage, ogType, ogUrl string) {
 				cursor: url('/key_cursor.png'), auto;
 			}
 		</style>
-		<body id="body" class="bg-[#121212] text-white">
+		<body id="body" class="bg-[#121212] text-white flex flex-col min-h-dvh">
 			@Body() {
 				{ children... }
 			}
@@ -51,7 +51,7 @@ templ Page(title, description, previewImage, ogType, ogUrl string) {
 templ Body() {
 	@components.Navbar()
 	<div class="h-24 w-full"></div>
-	<main id="main">
+	<main id="main" class="flex-grow flex justify-center items-center flex-col">
 		{ children... }
 	</main>
 	@components.Footer()

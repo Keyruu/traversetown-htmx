@@ -3,13 +3,16 @@ version: "3"
 tasks:
   build:
     cmds:
-      - npx tailwindcss -i ./main.css -o ./pb_public/main.css
       - go build -o ./tmp/out .
 
   run:
     cmds:
       - ./tmp/out serve
 
-  watch:
+  watch-templ:
     cmds:
       - templ generate --watch --proxy="http://localhost:8090" --cmd="task build run"
+
+  watch-tailwind:
+    cmds:
+      - npx tailwindcss -i ./main.css -o ./pb_public/main.css --minify --watch
