@@ -2,11 +2,11 @@ package index
 
 import (
 	"github.com/keyruu/traversetown-htmx/models"
-	"github.com/keyruu/traversetown-htmx/views/layouts"
 	"github.com/keyruu/traversetown-htmx/utils"
+	"github.com/keyruu/traversetown-htmx/views/layouts"
+	"github.com/keyruu/traversetown-htmx/views/likes"
 	"github.com/keyruu/traversetown-htmx/views/listens"
 	"github.com/keyruu/traversetown-htmx/views/music"
-	"github.com/keyruu/traversetown-htmx/views/likes"
 )
 
 templ Page(releases []models.Releases, devops []models.Fullstack) {
@@ -39,7 +39,7 @@ templ Main(releases []models.Releases, devops []models.Fullstack) {
 	<section id="releases" class="my-20">
 		@music.Releases(releases, 0, false)
 	</section>
-	<section id="haveilistenedto" class="bg-neutral">
+	<section id="haveilistenedto" class="bg-neutral w-full">
 		@listens.HaveIListenedTo()
 	</section>
 	<div hx-trigger="revealed" hx-get="/activity" hx-swap="outerHTML"></div>
